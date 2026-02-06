@@ -95,15 +95,64 @@ function renderChannel(slug){
  app.innerHTML='';
  const c=channels.find(function(x){return x.slug===slug});
  if(!c){renderHome();return;}
+
  const wrap=document.createElement('div');
- wrap.style.textAlign='center';
- wrap.style.padding='40px';
- wrap.innerHTML='<img src="'+c.logo+'" style="width:220px"><h1>'+c.name+'</h1><div class="live">● LIVE</div><br><button id="play">▶ Watch Live</button>';
+ wrap.style.maxWidth='980px';
+ wrap.style.margin='0 auto';
+ wrap.style.padding='30px 20px';
+
+ wrap.innerHTML=''
+ +'<div style="display:flex;gap:20px;flex-wrap:wrap;align-items:center">'
+ +'  <img src="'+c.logo+'" style="width:200px;max-height:120px;object-fit:contain">'
+ +'  <div>'
+ +'    <h1 style="margin:0">'+c.name+'</h1>'
+ +'    <div class="live">● LIVE NOW</div>'
+ +'    <p style="opacity:.85;max-width:520px">Watch '+c.name+' live online. Stay updated with breaking news, headlines, and live coverage from this TV channel.</p>'
+ +'    <button id="playMain">▶ Watch Live</button>'
+ +'  </div>'
+ +'</div>'
+
+ +'<div style="margin-top:30px">'
+ +'  <div style="background:#020617;border-radius:16px;padding:20px">'
+ +'    <div style="position:relative;background:#000;border-radius:12px;overflow:hidden">'
+ +'      <div style="padding-top:56.25%"></div>'
+ +'      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">'
+ +'        <div style="text-align:center">'
+ +'          <div class="spinner"></div>'
+ +'          <div style="margin-top:14px;opacity:.9">Live stream loading…</div>'
+ +'          <div style="margin-top:8px;font-size:13px;opacity:.6">Click play to connect</div>'
+ +'        </div>'
+ +'      </div>'
+ +'    </div>'
+ +'  </div>'
+ +'</div>'
+
+ +'<div style="margin-top:34px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px">'
+ +'  <div style="background:#020617;border-radius:14px;padding:18px">'
+ +'    <h3>About '+c.name+'</h3>'
+ +'    <p style="font-size:14px;opacity:.8">'+c.name+' is a television news channel providing 24/7 coverage, live reports, and international news updates.</p>'
+ +'  </div>'
+ +'  <div style="background:#020617;border-radius:14px;padding:18px">'
+ +'    <h3>Program Schedule</h3>'
+ +'    <ul style="font-size:14px;opacity:.8;line-height:1.7;padding-left:18px">'
+ +'      <li>Breaking News</li>'
+ +'      <li>Live Studio Coverage</li>'
+ +'      <li>World Headlines</li>'
+ +'      <li>Special Reports</li>'
+ +'    </ul>'
+ +'  </div>'
+ +'  <div style="background:#020617;border-radius:14px;padding:18px">'
+ +'    <h3>Channel Info</h3>'
+ +'    <p style="font-size:14px;opacity:.8">Category: News TV<br>Status: Live Stream<br>Quality: HD</p>'
+ +'  </div>'
+ +'</div>';
+
  app.appendChild(wrap);
- document.getElementById('play').onclick=function(){openLive(c.name,c.slug);};
+ document.getElementById('playMain').onclick=function(){openLive(c.name,c.slug);};
 }
 
-if(ch){renderChannel(ch);}else{renderHome();}
+if(ch){renderChannel(ch)}else{renderHome()}
+{renderChannel(ch);}else{renderHome();}
 </script>
 
 </body>
