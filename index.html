@@ -92,8 +92,8 @@ function renderHome(){
   channels.forEach(function(c){
     const card=document.createElement('div');
     card.className='card';
-    card.innerHTML='<img src="'+c.logo+'"><h3>'+c.name+'</h3><div class="live">● LIVE</div><button>Watch Live</button>';
-    card.onclick=function(){openLive(c.name,c.slug)};
+    card.innerHTML='<img src="'+c.logo+'"><h3>'+c.name+'</h3><div class="live">● LIVE</div><button onclick="event.stopPropagation();openLive('"+c.name+"','"+c.slug+"')">Watch Live</button>';
+    card.onclick=function(){window.location.href='?ch='+c.slug;};
     grid.appendChild(card);
   });
 
