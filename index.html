@@ -96,7 +96,7 @@ button{
 </style>
 </head>
 <body>
-<header>🌍 Live TV News Channels</header>
+<header>📺 IPTV Live Channels</header>
 <div id="app"></div>
 
 <script>
@@ -119,40 +119,53 @@ const params=new URLSearchParams(window.location.search);
 const ch=params.get('ch');
 
 function renderHome(){
- app.innerHTML='<div class="grid"></div>';
- const grid=document.querySelector('.grid');
- channels.forEach(c=>{
-   const d=document.createElement('div');
-   d.className='card';
-   d.innerHTML=`<img src="${c.logo}"><div>${c.name}</div><div class="live">● LIVE</div><button>Watch Live</button>`;
-   d.onclick=()=>{window.location='?ch='+c.slug};
-   grid.appendChild(d);
- });
+ app.innerHTML=`
+ <div style="display:flex;gap:20px;min-height:70vh">
+   <div style="width:280px;background:#020617;border-radius:16px;padding:10px;overflow-y:auto;max-height:70vh">
+     ${channels.map(c=>`
+       <div style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:12px;cursor:pointer" onclick="location.href='?ch=${c.slug}'">
+         <img src="${c.logo}" style="width:42px;height:28px;object-fit:contain">
+         <div style="flex:1">
+           <div style="font-size:14px">${c.name}</div>
+           <div class="live">● LIVE</div>
+         </div>
+       </div>`).join('')}
+   </div>
+
+   <div style="flex:1">
+     <div class="player-box">
+       <div class="player-inner">
+         <div style="opacity:.7">Select a channel from the left</div>
+       </div>
+     </div>
+   </div>
+ </div>`;
 }
 
 function renderChannel(slug){
  const c=channels.find(x=>x.slug===slug);
  if(!c){renderHome();return;}
  app.innerHTML=`
- <div class="player">
-   <div class="back" onclick="location.href='/'">← Back to channels</div>
-   <h1>${c.name}</h1>
-   <div class="live">● LIVE NOW</div>
-
-   <div class="player-box">
-     <div class="player-inner" id="playerInner">
-       <img src="${c.logo}" style="max-width:200px;max-height:120px;object-fit:contain;opacity:.9" />
-       <button style="margin-top:20px" onclick="startPlay('${c.slug}')">▶ Watch Live</button>
-     </div>
+ <div style="display:flex;gap:20px;min-height:70vh">
+   <div style="width:280px;background:#020617;border-radius:16px;padding:10px;overflow-y:auto;max-height:70vh">
+     ${channels.map(x=>`
+       <div style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:12px;cursor:pointer;${x.slug===slug?'background:#020617':''}" onclick="location.href='?ch=${x.slug}'">
+         <img src="${x.logo}" style="width:42px;height:28px;object-fit:contain">
+         <div style="flex:1">
+           <div style="font-size:14px">${x.name}</div>
+           <div class="live">● LIVE</div>
+         </div>
+       </div>`).join('')}
    </div>
 
-   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin-top:26px">
-     ${channels.filter(x=>x.slug!==slug).slice(0,8).map(x=>`
-       <div class="card" onclick="location.href='?ch=${x.slug}'">
-         <img src="${x.logo}" />
-         <div style="font-size:14px">${x.name}</div>
-         <div class="live">● LIVE</div>
-       </div>`).join('')}
+   <div style="flex:1">
+     <h1 style="margin-top:0">${c.name}</h1>
+     <div class="player-box">
+       <div class="player-inner" id="playerInner">
+         <img src="${c.logo}" style="max-width:220px;max-height:120px;object-fit:contain;opacity:.9" />
+         <button style="margin-top:18px" onclick="startPlay('${c.slug}')">▶ Watch Live</button>
+       </div>
+     </div>
    </div>
  </div>`;
 }
