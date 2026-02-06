@@ -61,6 +61,8 @@
     .channel.active { background:#ff2c2c; }
     .channel img { width:38px; height:38px; border-radius:8px; object-fit:cover; }
 
+    .channel-search { margin-bottom:8px; padding:6px 10px; border-radius:6px; border:none; width:100%; font-size:13px; }
+
     .ads-banner { width:100%; max-width:300px; margin:12px auto; text-align:center; }
     .ads-native { width:100%; margin-top:12px; text-align:center; }
 
@@ -103,12 +105,24 @@ const channels = [
   {name:'CNN',slug:'cnn-live',logo:'https://media.cnn.com/api/v1/images/cnn/cnn-placeholder-image.jpeg?c=16x9&q=h_270,w_480,c_fill',background:'https://media.cnn.com/api/v1/images/cnn/cnn-placeholder-image.jpeg?c=16x9&q=h_270,w_480,c_fill',smartlink:'https://tuckerclassesjackal.com/x5xfim9w?key=688ec6c1d935ff3ebfc3c2450ddf461f'},
   {name:'BBC',slug:'bbc-live',logo:'https://images7.alphacoders.com/139/thumb-1920-1390350.png',background:'https://images7.alphacoders.com/139/thumb-1920-1390350.png',smartlink:'https://tuckerclassesjackal.com/x5xfim9w?key=688ec6c1d935ff3ebfc3c2450ddf461f'},
   {name:'Al Jazeera',slug:'aljazeera-live',logo:'https://i.ytimg.com/vi/bNyUyrR0PHo/maxresdefault.jpg',background:'https://i.ytimg.com/vi/bNyUyrR0PHo/maxresdefault.jpg',smartlink:'https://tuckerclassesjackal.com/x5xfim9w?key=688ec6c1d935ff3ebfc3c2450ddf461f'}
+  // bisa tambah channel sebanyak yang kamu mau
 ];
 
 const slug = location.pathname.replace('/','') || channels[0].slug;
 const current = channels.find(c=>c.slug===slug) || channels[0];
-const sidebar = channels.map(c=>`<a href="/${c.slug}" class="channel ${c.slug===current.slug?'active':''}"><img src="${c.logo}"><strong>${c.name}</strong></a>`).join('');
 
+// Render sidebar dengan search + max 10 visible
+function renderSidebar(channels) {
+  const visibleChannels = channels.slice(0,10);
+  return `
+    <input type="text" id="channelSearch" placeholder="Cari channel..." class="channel-search" />
+    <div id="channelList">
+      ${visibleChannels.map(c=>`<div class="channel ${c.slug===current.slug?'active':''}" data-slug="${c.slug}"><img src="${c.logo}"><strong>${c.name}</strong></div>`).join('')}
+    </div>
+  `;
+}
+
+// Render layout
 document.getElementById('app').innerHTML = `
 <div class="layout">
   <div>
@@ -137,7 +151,7 @@ document.getElementById('app').innerHTML = `
     </div>
   </div>
   <aside class="sidebar">
-    ${sidebar}
+    ${renderSidebar(channels)}
   </aside>
 </div>
 `;
@@ -175,6 +189,26 @@ nativeScript.async = true;
 nativeScript.setAttribute('data-cfasync','false');
 nativeScript.src = 'https://tuckerclassesjackal.com/4f4db07c00df56205a17f43ff7e40355/invoke.js';
 nativeContainer.appendChild(nativeScript);
+
+// Channel search filter
+const channelSearch = document.getElementById('channelSearch');
+const channelList = document.getElementById('channelList');
+channelSearch.addEventListener('input', () => {
+  const val = channelSearch.value.toLowerCase();
+  channelList.innerHTML = channels.filter(c => c.name.toLowerCase().includes(val)).map(c =>
+    `<div class="channel ${c.slug===current.slug?'active':''}" data-slug="${c.slug}"><img src="${c.logo}"><strong>${c.name}</strong></div>`
+  ).join('');
+
+  // klik channel ganti halaman
+  document.querySelectorAll('#channelList .channel').forEach(el => {
+    el.onclick = () => location.href = '/' + el.dataset.slug;
+  });
+});
+
+// initial click events for visible channels
+document.querySelectorAll('#channelList .channel').forEach(el => {
+  el.onclick = () => location.href = '/' + el.dataset.slug;
+});
 </script>
 
 </body>
