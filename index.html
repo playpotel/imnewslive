@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live TV Channels</title>
+  <style>
+    :root{--bg:#0f172a;--card:#020617;--text:#e5e7eb;--muted:#94a3b8}
+    [data-theme=light]{--bg:#f8fafc;--card:#fff;--text:#020617;--muted:#475569}
+    body{margin:0;font-family:system-ui,Arial;background:var(--bg);color:var(--text)}
+    header{padding:16px 20px;background:var(--card);display:flex;justify-content:space-between;align-items:center}
+    h1{margin:0;font-size:20px}
+    button,input,select{padding:8px 10px;border-radius:8px;border:1px solid #334155;background:var(--card);color:var(--text)}
+    .controls{padding:12px 20px;display:flex;gap:10px;flex-wrap:wrap}
+    .grid{padding:20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .card{background:var(--card);border-radius:16px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.25);cursor:pointer}
+    .thumb{position:relative;aspect-ratio:16/9;background:#000}
+    .thumb img{width:100%;height:100%;object-fit:contain;padding:20px}
+    .live{position:absolute;top:10px;left:10px;background:#dc2626;color:#fff;font-size:12px;padding:4px 8px;border-radius:999px}
+    .card h3{text-align:center;margin:0;padding:10px;font-size:15px;border-top:1px solid #334155}
+    .center{min-height:70vh;display:flex;align-items:center;justify-content:center;text-align:center}
+    footer{text-align:center;padding:14px;font-size:13px;color:var(--muted)}
+  </style>
+</head>
+<body data-theme="dark">
+<header>
+  <h1 id="title">📺 Live TV Channels</h1>
+  <button onclick="toggleTheme()">🌙 / ☀️</button>
+</header>
+
+<div id="home">
+  <div class="controls">
+    <input id="search" placeholder="Search channel..." onkeyup="renderHome()">
+    <select id="country" onchange="renderHome()">
+      <option value="all">🌍 Semua Negara</option>
+      <option value="US">Amerika</option>
+      <option value="UK">UK</option>
+      <option value="QA">Qatar</option>
+      <option value="FR">France</option>
+      <option value="DE">Germany</option>
+    </select>
+  </div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<div id="channel" class="center" style="display:none"></div>
+
+<footer>Static TV Landing • Share per channel • Monetize ready</footer>
+
+<script>
+const SMARTLINK = "https://your-smartlink-here.com";
+
+const channels = [
+// ================= ENGLISH CORE (US / UK / CA / AU) =================
+{slug:'cnn',name:'CNN International',country:'US',img:'https://upload.wikimedia.org/wikipedia/commons/b/b1/CNN.svg'},
+{slug:'foxnews',name:'Fox News',country:'US',img:'https://upload.wikimedia.org/wikipedia/commons/6/67/Fox_News_Channel_logo.svg'},
+{slug:'msnbc',name:'MSNBC',country:'US',img:'https://upload.wikimedia.org/wikipedia/commons/5/5a/MSNBC_logo.svg'},
+{slug:'nbcnews',name:'NBC News',country:'US',img:'https://upload.wikimedia.org/wikipedia/commons/6/6d/NBC_News_2013.svg'},
+{slug:'abcnews',name:'ABC News',country:'US',img:'https://upload.wikimedia.org/wikipedia/commons/2/2f/ABC_News_logo_2021.svg'},
+{slug:'cbsnews',name:'CBS News',country:'US',img:'https://upload.wikimedia.org/wikipedia/commons/1/1a/CBS_News_logo.svg'},
+{slug:'newsmax',name:'Newsmax',country:'US',img:'https://upload.wikimedia.org/wikipedia/commons/2/26/Newsmax_TV_logo.svg'},
+{slug:'cspan',name:'C-SPAN',country:'US',img:'https://upload.wikimedia.org/wikipedia/commons/7/74/C-SPAN_logo_2019.svg'},
+
+{slug:'bbc',name:'BBC World News',country:'UK',img:'https://upload.wikimedia.org/wikipedia/commons/4/41/BBC_News_2022.svg'},
+{slug:'skynews',name:'Sky News',country:'UK',img:'https://upload.wikimedia.org/wikipedia/commons/b/b4/Sky-news-logo.png'},
+{slug:'itvnews',name:'ITV News',country:'UK',img:'https://upload.wikimedia.org/wikipedia/commons/9/9b/ITV_News_Logo.svg'},
+{slug:'channel4news',name:'Channel 4 News',country:'UK',img:'https://upload.wikimedia.org/wikipedia/commons/2/2c/Channel_4_News_logo_2018.svg'},
+
+{slug:'cbcnews',name:'CBC News',country:'CA',img:'https://upload.wikimedia.org/wikipedia/commons/6/6f/CBC_News_Logo.svg'},
+{slug:'ctvnews',name:'CTV News',country:'CA',img:'https://upload.wikimedia.org/wikipedia/commons/9/9f/CTV_News_logo.svg'},
+{slug:'globalnews',name:'Global News',country:'CA',img:'https://upload.wikimedia.org/wikipedia/commons/2/2e/Global_News_logo.svg'},
+
+{slug:'abcau',name:'ABC News Australia',country:'AU',img:'https://upload.wikimedia.org/wikipedia/commons/5/56/ABC_News_Australia_logo.svg'},
+{slug:'sbsnews',name:'SBS News',country:'AU',img:'https://upload.wikimedia.org/wikipedia/commons/1/1d/SBS_News_logo.svg'},
+{slug:'skynewsaus',name:'Sky News Australia',country:'AU',img:'https://upload.wikimedia.org/wikipedia/commons/3/3b/Sky_News_Australia_logo.svg'},
+
+// ================= RUSSIAN LANGUAGE =================
+{slug:'rt',name:'RT News',country:'RU',img:'https://upload.wikimedia.org/wikipedia/commons/a/a0/Russia-today-logo.svg'},
+{slug:'rbc',name:'RBC TV',country:'RU',img:'https://upload.wikimedia.org/wikipedia/commons/4/4b/RBC_logo.svg'},
+{slug:'rossiya24',name:'Rossiya 24',country:'RU',img:'https://upload.wikimedia.org/wikipedia/commons/9/98/Rossiya_24_logo.svg'},
+
+// ================= BULGARIAN =================
+{slug:'bnt',name:'BNT News',country:'BG',img:'https://upload.wikimedia.org/wikipedia/commons/8/8e/BNT_logo.svg'},
+{slug:'btvbg',name:'bTV News',country:'BG',img:'https://upload.wikimedia.org/wikipedia/commons/3/34/Btv_logo.svg'},
+{slug:'novabg',name:'Nova News',country:'BG',img:'https://upload.wikimedia.org/wikipedia/commons/7/7a/Nova_TV_Bulgaria_logo.svg'},
+
+// ================= GREEK =================
+{slug:'ertnews',name:'ERT News',country:'GR',img:'https://upload.wikimedia.org/wikipedia/commons/6/6b/ERT_logo_2022.svg'},
+{slug:'skai',name:'SKAI TV',country:'GR',img:'https://upload.wikimedia.org/wikipedia/commons/3/36/SKAI_TV_logo.svg'},
+{slug:'ant1',name:'ANT1 News',country:'GR',img:'https://upload.wikimedia.org/wikipedia/commons/5/5f/ANT1_logo.svg'},
+
+// ================= THAI =================
+{slug:'thairath',name:'Thairath TV',country:'TH',img:'https://upload.wikimedia.org/wikipedia/commons/6/66/Thairath_TV_logo.svg'},
+{slug:'pptv',name:'PPTV HD',country:'TH',img:'https://upload.wikimedia.org/wikipedia/commons/3/33/PPTV_HD_36_Logo.svg'},
+{slug:'nationtv',name:'Nation TV',country:'TH',img:'https://upload.wikimedia.org/wikipedia/commons/1/1d/Nation_TV_Thailand_logo.svg'},
+
+// ================= KOREAN =================
+{slug:'yonhap',name:'Yonhap News TV',country:'KR',img:'https://upload.wikimedia.org/wikipedia/commons/5/55/Yonhap_News_TV_logo.svg'},
+{slug:'kbsworld',name:'KBS World',country:'KR',img:'https://upload.wikimedia.org/wikipedia/commons/3/3f/KBS_World_logo.svg'},
+{slug:'mbn',name:'MBN News',country:'KR',img:'https://upload.wikimedia.org/wikipedia/commons/6/6c/MBN_logo.svg'},
+
+// ================= TAIWAN =================
+{slug:'ctitv',name:'CTI News',country:'TW',img:'https://upload.wikimedia.org/wikipedia/commons/7/7c/CTi_TV_logo.svg'},
+{slug:'setnews',name:'SET News',country:'TW',img:'https://upload.wikimedia.org/wikipedia/commons/0/0c/SET_TV_logo.svg'},
+{slug:'tvbs',name:'TVBS News',country:'TW',img:'https://upload.wikimedia.org/wikipedia/commons/5/56/TVBS_logo.svg'}
+];
+
+const q = new URLSearchParams(location.search);
+const slug = q.get('ch');
+
+if(slug){renderChannel(slug)} else {renderHome()}
+
+function renderHome(){
+ const s=document.getElementById('search').value?.toLowerCase()||'';
+ const c=document.getElementById('country').value||'all';
+ const g=document.getElementById('grid');
+ g.innerHTML='';
+ channels.filter(x=>(c==='all'||x.country===c)&&x.name.toLowerCase().includes(s))
+ .forEach(x=>{
+  g.innerHTML+=`
+   <div class="card" onclick="location.href='?ch=${x.slug}'">
+    <div class="thumb"><img src="${x.img}"><div class="live">LIVE</div></div>
+    <h3>${x.name}</h3>
+   </div>`;
+ });
+}
+
+function renderChannel(sl){
+ document.getElementById('home').style.display='none';
+ document.getElementById('channel').style.display='flex';
+ const x=channels.find(c=>c.slug===sl);
+ if(!x)return;
+ document.title=x.name+' Live';
+ document.getElementById('title').innerText=x.name+' • LIVE';
+ document.getElementById('channel').innerHTML=`
+  <div>
+   <img src="${x.img}" style="max-width:260px">
+   <h2>${x.name}</h2>
+   <p>Live streaming preview</p>
+   <button onclick="openLive('${x.name}')">▶ Watch Live</button>
+  </div>`;
+}
+
+function openLive(name, slug){
+ // === CLICK TRACKING (Histats Event) ===
+if(window._Hasync){
+ _Hasync.push(['Histats.track_event', `click_${slug}`]);
+ _Hasync.push(['Histats.track_event', `country_${(currentCountry||'all')}`]);
+}
+…</div></div>`;
+ document.body.appendChild(o);
+ setTimeout(()=>{window.open(SMARTLINK,'_blank');o.remove()},2200);
+}
+
+function toggleTheme(){document.body.dataset.theme=document.body.dataset.theme==='dark'?'light':'dark'}
+</script>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+</body>
+</html>
