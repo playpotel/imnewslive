@@ -3,18 +3,12 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>MSNBC Live News Stream</title>
-<meta name="description" content="Watch MSNBC live news stream online. Latest breaking news, politics, and world news." />
 
-<!-- SCHEMA -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "NewsArticle",
-  "headline": "MSNBC Live News Stream",
-  "publisher": {"@type": "Organization", "name": "Live News Mag"}
-}
-</script>
+<title id="page-title">Live TV Channel</title>
+<meta name="description" id="meta-desc" content="Watch live TV channel online." />
+
+<!-- Dynamic Schema -->
+<script type="application/ld+json" id="schema"></script>
 
 <style>
 *{box-sizing:border-box}
@@ -25,19 +19,19 @@ a{text-decoration:none;color:inherit}
 
 .player{background:#000;border-radius:14px;overflow:hidden;position:relative}
 .player::before{content:"";display:block;padding-top:56.25%}
-.player-inner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column}
+.player-inner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center}
 .player-inner img{max-width:160px;margin-bottom:16px}
-.play{background:#22c55e;border:none;border-radius:50%;width:64px;height:64px;display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer}
+.play{background:#22c55e;border:none;border-radius:50%;width:64px;height:64px;font-size:28px;cursor:pointer}
 .spinner{width:44px;height:44px;border:4px solid #333;border-top:4px solid #22c55e;border-radius:50%;animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 .layout{display:grid;grid-template-columns:1fr 320px;gap:20px;margin-top:18px}
 .card{background:#020617;border:1px solid #1e293b;border-radius:14px;padding:14px}
-.card h3{margin-top:0;font-size:16px}
+.card h1,.card h3{margin-top:0}
 .list a{display:flex;gap:10px;align-items:center;padding:8px;border-radius:10px}
 .list a:hover{background:#020617}
 .list img{width:40px;height:26px;object-fit:contain}
-.ad{background:#020617;border:1px dashed #334155;border-radius:12px;padding:12px;text-align:center;font-size:13px;opacity:.9}
+.ad{background:#020617;border:1px dashed #334155;border-radius:12px;padding:12px;text-align:center;font-size:13px}
 
 @media(max-width:900px){.layout{grid-template-columns:1fr}}
 @media(max-width:600px){header{font-size:16px}.play{width:56px;height:56px}}
@@ -45,13 +39,13 @@ a{text-decoration:none;color:inherit}
 </head>
 <body>
 
-<header>📺 MSNBC Live TV</header>
+<header id="header-title">📺 Live TV</header>
 
 <div class="container">
 
 <div class="player">
   <div class="player-inner" id="play-overlay">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/9/9e/MSNBC_2015.svg" alt="MSNBC Logo">
+    <img id="channel-logo" src="" alt="Channel Logo" />
     <button class="play" onclick="handlePlayClick()">▶</button>
   </div>
 </div>
@@ -59,8 +53,8 @@ a{text-decoration:none;color:inherit}
 <div class="layout">
 
 <div class="card">
-<h1>Watch MSNBC Live Stream</h1>
-<p>MSNBC is a leading American news channel covering politics, breaking news, and global events. Click play to watch the live broadcast.</p>
+<h1 id="channel-name">Channel Name</h1>
+<p id="channel-desc">Channel description</p>
 
 <!-- NATIVE ADS -->
 <div class="ad">
@@ -69,18 +63,11 @@ a{text-decoration:none;color:inherit}
 </div>
 
 <p style="font-size:13px;opacity:.7">Disclaimer: This site does not host or broadcast any video streams.</p>
-
-
-
 </div>
 
 <div class="card">
 <h3>Other Live Channels</h3>
-<div class="list">
-<a href="/channel/cnn"><img src="https://upload.wikimedia.org/wikipedia/commons/6/66/CNN_International_logo.svg"> CNN</a>
-<a href="/channel/fox-news"><img src="https://upload.wikimedia.org/wikipedia/commons/6/67/Fox_News_Channel_logo.svg"> Fox News</a>
-<a href="/channel/bbc-news"><img src="https://upload.wikimedia.org/wikipedia/commons/b/bc/BBC_News_2019.svg"> BBC News</a>
-</div>
+<div class="list" id="channel-list"></div>
 
 <!-- 300x250 BANNER -->
 <div class="ad">
@@ -94,14 +81,58 @@ a{text-decoration:none;color:inherit}
 </div>
 </div>
 
-<!-- SMARTLINK HANDLER -->
 <script>
+// SMARTLINK
 const SMARTLINK_URL='https://tuckerclassesjackal.com/x5xfim9w?key=688ec6c1d935ff3ebfc3c2450ddf461f';
 function handlePlayClick(){
   const overlay=document.getElementById('play-overlay');
   overlay.innerHTML='<div class="spinner"></div><div style="margin-top:10px">Connecting…</div>';
   setTimeout(()=>{window.location.href=SMARTLINK_URL;},1200);
 }
+
+// CHANNEL DATABASE (ADD UP TO 100+ HERE)
+const channels=[
+ {slug:'msnbc',name:'MSNBC',country:'US',logo:'https://upload.wikimedia.org/wikipedia/commons/9/9e/MSNBC_2015.svg',desc:'American news channel covering politics and world news.'},
+ {slug:'cnn',name:'CNN',country:'US',logo:'https://upload.wikimedia.org/wikipedia/commons/6/66/CNN_International_logo.svg',desc:'Breaking news and international coverage.'},
+ {slug:'fox-news',name:'Fox News',country:'US',logo:'https://upload.wikimedia.org/wikipedia/commons/6/67/Fox_News_Channel_logo.svg',desc:'US cable news television channel.'},
+ {slug:'bbc-news',name:'BBC News',country:'UK',logo:'https://upload.wikimedia.org/wikipedia/commons/b/bc/BBC_News_2019.svg',desc:'UK public service news broadcasting.'},
+ {slug:'cbc-news',name:'CBC News',country:'CA',logo:'https://upload.wikimedia.org/wikipedia/commons/2/2f/CBC_News_2013.svg',desc:'Canadian national news network.'},
+ {slug:'abc-news-au',name:'ABC News AU',country:'AU',logo:'https://upload.wikimedia.org/wikipedia/commons/2/2e/ABC_News_logo_2018.svg',desc:'Australian public news service.'},
+ {slug:'rt',name:'RT',country:'RU',logo:'https://upload.wikimedia.org/wikipedia/commons/a/a0/Russia-today-logo.svg',desc:'Russian international television network.'},
+ {slug:'kbs-world',name:'KBS World',country:'KR',logo:'https://upload.wikimedia.org/wikipedia/commons/5/5a/KBS_World_Logo.svg',desc:'Korean international broadcasting channel.'},
+ {slug:'thai-pbs',name:'Thai PBS',country:'TH',logo:'https://upload.wikimedia.org/wikipedia/en/7/7c/Thai_PBS_Logo.svg',desc:'Thailand public broadcasting service.'}
+];
+
+// ROUTING
+const slug=window.location.pathname.split('/').pop() || 'msnbc';
+const channel=channels.find(c=>c.slug===slug) || channels[0];
+
+// APPLY CONTENT
+document.getElementById('page-title').innerText=channel.name+' Live TV';
+document.getElementById('meta-desc').content='Watch '+channel.name+' live TV stream online.';
+document.getElementById('header-title').innerText='📺 '+channel.name+' Live';
+document.getElementById('channel-name').innerText=channel.name+' Live Stream';
+document.getElementById('channel-desc').innerText=channel.desc;
+document.getElementById('channel-logo').src=channel.logo;
+
+// SCHEMA
+document.getElementById('schema').textContent=JSON.stringify({
+ '@context':'https://schema.org',
+ '@type':'NewsArticle',
+ 'headline':channel.name+' Live Stream',
+ 'publisher':{'@type':'Organization','name':'Live TV Network'}
+});
+
+// OTHER CHANNEL LIST
+const list=document.getElementById('channel-list');
+channels.forEach(c=>{
+ if(c.slug!==channel.slug){
+  const a=document.createElement('a');
+  a.href='/channel/'+c.slug;
+  a.innerHTML=`<img src="${c.logo}" alt="${c.name}"> ${c.name}`;
+  list.appendChild(a);
+ }
+});
 </script>
 
 <!-- SOCIAL BAR -->
