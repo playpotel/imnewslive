@@ -1,108 +1,157 @@
-<!-- AUTO-GENERATED IPTV CHANNEL – IPTV STYLE UI -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-<meta charset="UTF-8">
-<title id="pageTitle">Live TV Channel</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-:root{--bg:#0b1220;--card:#111827;--accent:#22c55e}
-*{box-sizing:border-box}
-body{margin:0;font-family:Inter,Arial;background:linear-gradient(180deg,#0b1220,#020617);color:#fff}
-header{padding:16px 20px;font-size:20px;font-weight:600}
-.container{display:grid;grid-template-columns:280px 1fr;gap:16px;padding:0 16px 16px}
-.sidebar{background:rgba(255,255,255,.03);border-radius:14px;overflow:auto;max-height:calc(100vh - 120px)}
-.channel-item{display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.05)}
-.channel-item:hover{background:rgba(255,255,255,.05)}
-.channel-item img{width:42px;height:42px;object-fit:contain;background:#000;border-radius:6px;padding:4px}
-.channel-item span{font-size:14px}
-.player{background:#000;border-radius:16px;position:relative;min-height:420px;overflow:hidden}
-.player-bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:blur(2px) brightness(.6)}
-.player-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2}
-.player-overlay img{max-width:180px;margin-bottom:20px}
-.play-btn{width:84px;height:84px;border-radius:50%;background:rgba(34,197,94,.2);border:3px solid var(--accent);display:flex;align-items:center;justify-content:center;cursor:pointer}
-.play-btn:before{content:'';border-left:26px solid var(--accent);border-top:15px solid transparent;border-bottom:15px solid transparent;margin-left:6px}
-.loading{display:none;margin-top:12px;font-size:14px}
-.grid{margin-top:16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
-.card{background:rgba(255,255,255,.04);border-radius:12px;padding:12px;text-align:center;cursor:pointer}
-.card img{width:100%;height:80px;object-fit:contain;background:#000;border-radius:8px}
-.card span{display:block;margin-top:8px;font-size:13px}
-@media(max-width:900px){.container{grid-template-columns:1fr}.sidebar{max-height:none}}
-</style>
+  <meta charset="UTF-8" />
+  <title>Live TV News Streaming</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Live TV News streaming – breaking news, headlines, and live coverage." />
+
+  <!-- SEO LiveBlogPosting -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LiveBlogPosting",
+    "headline": "Live TV News Streaming",
+    "description": "Watch live TV news with real-time headlines and updates.",
+    "datePublished": "2026-01-01T00:00:00Z",
+    "dateModified": "2026-01-01T00:00:00Z",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Global News Live",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://picsum.photos/200/60"
+      }
+    }
+  }
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',sans-serif;background:#0b0b0f;color:#fff}
+    a{text-decoration:none;color:inherit}
+
+    header{position:fixed;top:0;left:0;right:0;height:56px;background:#000;display:flex;align-items:center;padding:0 16px;z-index:50}
+    header .logo{font-weight:700;color:#ff2c2c}
+
+    main{padding-top:56px;max-width:1400px;margin:auto}
+
+    .layout{display:grid;grid-template-columns:1fr 320px;gap:20px;padding:16px}
+
+    /* PLAYER */
+    .player-wrap{background:#000;border-radius:12px;overflow:hidden}
+    .player{position:relative;width:100%;padding-top:56.25%;background:#000}
+    .player button{position:absolute;inset:0;margin:auto;width:90px;height:90px;border-radius:50%;border:none;background:#ff2c2c;color:#fff;font-size:40px;cursor:pointer}
+
+    .live-badge{position:absolute;top:12px;left:12px;background:#ff2c2c;padding:6px 10px;border-radius:6px;font-size:12px;font-weight:700}
+
+    .meta{padding:14px}
+    .meta h1{margin:0 0 6px;font-size:22px}
+    .meta p{margin:0;font-size:14px;color:#ff6b6b}
+
+    /* TICKER */
+    .ticker{background:#111;padding:10px 0;overflow:hidden;border-top:1px solid #222}
+    .ticker-track{display:flex;gap:60px;white-space:nowrap;animation:scroll 30s linear infinite}
+    .ticker span{font-weight:600}
+    .ticker small{opacity:.7;margin-left:6px}
+
+    @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-100%)} }
+
+    /* SIDEBAR */
+    .sidebar{background:#111;border-radius:12px;padding:12px}
+    .channel{display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;cursor:pointer}
+    .channel:hover{background:#1b1b22}
+    .channel.active{background:#ff2c2c}
+    .channel img{width:42px;height:42px;border-radius:6px;object-fit:cover}
+
+    @media(max-width:900px){
+      .layout{grid-template-columns:1fr}
+      .sidebar{order:-1}
+    }
+  </style>
 </head>
 <body>
-<header>📺 Live TV Channels</header>
-<div class="container">
-  <aside class="sidebar" id="sidebar"></aside>
-  <main>
-    <div class="player">
-      <div class="player-bg" id="playerBg"></div>
-      <div class="player-overlay" id="playerOverlay">
-        <img id="channelLogo" alt="Channel Logo">
-        <div class="play-btn" onclick="playLive()"></div>
-        <div class="loading" id="loading">Connecting…</div>
+
+<header>
+  <div class="logo">LIVE NEWS</div>
+</header>
+
+<main id="app"></main>
+
+<script>
+const channels = [
+  {
+    name:'MSNBC',
+    slug:'msnbc-live',
+    logo:'https://www.hollywoodreporter.com/wp-content/uploads/2021/08/MSNBC-Logo-Publicity-H-2021.jpg',
+    smartlink:'https://tuckerclassesjackal.com/x5xfim9w?key=688ec6c1d935ff3ebfc3c2450ddf461f'
+  },
+  {
+    name:'CNN',
+    slug:'cnn-live',
+    logo:'https://media.cnn.com/api/v1/images/cnn/cnn-placeholder-image.jpeg?c=16x9&q=h_270,w_480,c_fill',
+    smartlink:'https://tuckerclassesjackal.com/x5xfim9w?key=688ec6c1d935ff3ebfc3c2450ddf461f'
+  },
+  {
+    name:'BBC',
+    slug:'bbc-live',
+    logo:'https://images7.alphacoders.com/139/thumb-1920-1390350.png',
+    smartlink:'https://tuckerclassesjackal.com/x5xfim9w?key=688ec6c1d935ff3ebfc3c2450ddf461f'
+  },
+  {
+    name:'Al Jazeera',
+    slug:'aljazeera-live',
+    logo:'https://i.ytimg.com/vi/bNyUyrR0PHo/maxresdefault.jpg',
+    smartlink:'https://tuckerclassesjackal.com/x5xfim9w?key=688ec6c1d935ff3ebfc3c2450ddf461f'
+  }
+];
+
+const slug = location.pathname.replace('/','') || channels[0].slug;
+const current = channels.find(c=>c.slug===slug) || channels[0];
+
+const sidebar = channels.map(c=>`
+  <a href="/${c.slug}" class="channel ${c.slug===current.slug?'active':''}">
+    <img src="${c.logo}">
+    <strong>${c.name}</strong>
+  </a>
+`).join('');
+
+document.getElementById('app').innerHTML = `
+<div class="layout">
+  <div>
+    <div class="player-wrap">
+      <div class="player">
+        <div class="live-badge">🔴 LIVE</div>
+        <button id="playBtn">▶</button>
+      </div>
+      <div class="meta">
+        <h1>${current.name} Live</h1>
+        <p>Live headline coverage • breaking news</p>
       </div>
     </div>
-    <div class="grid" id="grid"></div>
-  </main>
+
+    <div class="ticker">
+      <div class="ticker-track">
+        <span>BREAKING: Global market reacts to latest update <small>World</small></span>
+        <span>Election coverage continues across regions <small>Politics</small></span>
+        <span>Weather alert issued in multiple areas <small>Weather</small></span>
+      </div>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    ${sidebar}
+  </aside>
 </div>
-<script>
-const SMARTLINK='https://tuckerclassesjackal.com/x5xfim9w?key=688ec6c1d935ff3ebfc3c2450ddf461f';
-const channels=[
- // 🇺🇸 USA
- {slug:'cnn',name:'CNN',logo:'https://toppng.com/uploads/preview/cnn-international-logo-png-cnn-logo-11562982950rfhtq9kum0.png',bg:'https://author-service-images-prod-us-east-1.publishing.aws.arc.pub/bellmediainc/db975f26-3076-4c22-b296-c535a00ff69f.jpg',country:'US'},
- {slug:'foxnews',name:'Fox News',logo:'/logos/fox.png',bg:'/bg/fox.jpg',country:'US'},
- {slug:'msnbc',name:'MSNBC',logo:'/logos/msnbc.png',bg:'/bg/msnbc.jpg',country:'US'},
- {slug:'abcnews',name:'ABC News',logo:'/logos/abc.png',bg:'/bg/abc.jpg',country:'US'},
- {slug:'cbsnews',name:'CBS News',logo:'/logos/cbs.png',bg:'/bg/cbs.jpg',country:'US'},
+`;
 
- // 🇬🇧 UK
- {slug:'bbc',name:'BBC News',logo:'/logos/bbc.png',bg:'/bg/bbc.jpg',country:'UK'},
- {slug:'skynews',name:'Sky News',logo:'/logos/sky.png',bg:'/bg/sky.jpg',country:'UK'},
- {slug:'itvnews',name:'ITV News',logo:'/logos/itv.png',bg:'/bg/itv.jpg',country:'UK'},
-
- // 🇨🇦 CANADA
- {slug:'cbcnews',name:'CBC News',logo:'/logos/cbc.png',bg:'/bg/cbc.jpg',country:'CA'},
- {slug:'ctvnews',name:'CTV News',logo:'/logos/ctv.png',bg:'/bg/ctv.jpg',country:'CA'},
-
- // 🇦🇺 AUSTRALIA
- {slug:'abcau',name:'ABC News AU',logo:'/logos/abcau.png',bg:'/bg/abcau.jpg',country:'AU'},
- {slug:'sbs',name:'SBS News',logo:'/logos/sbs.png',bg:'/bg/sbs.jpg',country:'AU'},
-
- // 🇷🇺 RUSSIA
- {slug:'rt',name:'RT News',logo:'/logos/rt.png',bg:'/bg/rt.jpg',country:'RU'},
- {slug:'rbc',name:'RBC TV',logo:'/logos/rbc.png',bg:'/bg/rbc.jpg',country:'RU'},
-
- // 🇰🇷 KOREA
- {slug:'yonhap',name:'Yonhap News',logo:'/logos/yonhap.png',bg:'/bg/yonhap.jpg',country:'KR'},
- {slug:'kbs',name:'KBS World',logo:'/logos/kbs.png',bg:'/bg/kbs.jpg',country:'KR'},
-
- // 🇹🇭 THAILAND
- {slug:'thairath',name:'Thairath TV',logo:'/logos/thairath.png',bg:'/bg/thairath.jpg',country:'TH'},
- {slug:'pptv',name:'PPTV HD',logo:'/logos/pptv.png',bg:'/bg/pptv.jpg',country:'TH'}
-];
-const slug=location.pathname.split('/').pop()||channels[0].slug;
-const current=channels.find(c=>c.slug===slug)||channels[0];
-document.getElementById('pageTitle').innerText='Watch '+current.name+' Live';
-document.getElementById('playerBg').style.backgroundImage=`url(${current.bg})`;
-document.getElementById('channelLogo').src=current.logo;
-const sidebar=document.getElementById('sidebar');
-const grid=document.getElementById('grid');
-channels.forEach(c=>{
- const item=document.createElement('div');item.className='channel-item';
- item.innerHTML=`<img src="${c.logo}"><span>${c.name}</span>`;
- item.onclick=()=>location.href='/channel/'+c.slug;
- sidebar.appendChild(item);
- const card=document.createElement('div');card.className='card';
- card.innerHTML=`<img src="${c.logo}"><span>${c.name}</span>`;
- card.onclick=()=>location.href='/channel/'+c.slug;
- grid.appendChild(card);
-});
-function playLive(){
- document.querySelector('.play-btn').style.display='none';
- document.getElementById('loading').style.display='block';
- setTimeout(()=>location.href=SMARTLINK,1200);
-}
+// Fake loading redirect
+document.getElementById('playBtn').onclick=()=>{
+  document.getElementById('playBtn').innerText='…';
+  setTimeout(()=>location.href=current.smartlink,1500);
+};
 </script>
+
 </body>
 </html>
