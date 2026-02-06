@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="description" content="Live TV News streaming – breaking news, headlines, and live coverage." />
 
-  <!-- SEO LiveBlogPosting -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -39,12 +38,11 @@
 
     .layout { display:flex; flex-direction:row; gap:18px; width:100%; transition:all 0.3s ease; }
 
-    /* PLAYER */
-    .player-wrap { flex:1 1 auto; width:100%; max-width:100%; background:#000; border-radius:14px; overflow:hidden; }
+    .player-wrap { flex:1 1 auto; width:100%; max-width:100%; background:#000; border-radius:14px; overflow:hidden; position:relative; }
     .player { position:relative; width:100%; aspect-ratio:16/9; background-size:cover; background-position:center; }
     .player::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg,rgba(0,0,0,.25),rgba(0,0,0,.65)); }
-    .player button { position:absolute; inset:0; margin:auto; width:80px; height:80px; border-radius:50%; border:none; background:#ff2c2c; color:#fff; font-size:34px; cursor:pointer; z-index:2; }
-    .live-badge { position:absolute; top:10px; left:10px; background:#ff2c2c; padding:5px 9px; border-radius:6px; font-size:11px; font-weight:700; z-index:2; }
+    .player button { position:absolute; inset:0; margin:auto; width:80px; height:80px; border-radius:50%; border:none; background:#ff2c2c; color:#fff; font-size:34px; cursor:pointer; z-index:3; }
+    .live-badge { position:absolute; top:10px; left:10px; background:#ff2c2c; padding:5px 9px; border-radius:6px; font-size:11px; font-weight:700; z-index:3; }
 
     .meta { padding:12px; }
     .meta h1 { margin:0 0 6px; font-size:20px; }
@@ -56,16 +54,17 @@
     .ticker small { opacity:.7; margin-left:6px; font-size:12px; }
     @keyframes scroll { from { transform:translateX(0); } to { transform:translateX(-100%); } }
 
-    /* SIDEBAR */
     .sidebar { width:320px; flex-shrink:0; background:#111; border-radius:14px; padding:10px; display:flex; flex-direction:column; gap:6px; }
     .channel { display:flex; align-items:center; gap:10px; padding:10px; border-radius:10px; cursor:pointer; transition:all 0.2s; }
     .channel:hover { background:#1b1b22; }
     .channel.active { background:#ff2c2c; }
     .channel img { width:38px; height:38px; border-radius:8px; object-fit:cover; }
 
-    /* MOBILE RESPONSIVE */
+    .ads-banner { width:100%; max-width:300px; margin:12px auto; text-align:center; }
+    .ads-native { width:100%; margin-top:12px; text-align:center; }
+
     @media(max-width:900px) {
-      .layout { flex-direction: column; }
+      .layout { flex-direction:column; }
       .sidebar { width:100%; order:2; margin-top:12px; }
       .player-wrap { width:100%; }
     }
@@ -83,6 +82,10 @@
       .channel img { width:32px; height:32px; }
       .channel strong { font-size:12px; }
     }
+
+    .loading-overlay { position:absolute; inset:0; background:rgba(0,0,0,0.75); display:flex; flex-direction:column; justify-content:center; align-items:center; color:#fff; font-size:16px; font-weight:600; z-index:4; border-radius:14px; display:none; }
+    .loading-overlay .spinner { width:40px; height:40px; border:4px solid #ff2c2c; border-top:4px solid transparent; border-radius:50%; animation:spin 1s linear infinite; margin-bottom:12px; }
+    @keyframes spin { 0% { transform:rotate(0deg); } 100% { transform:rotate(360deg); } }
   </style>
 </head>
 <body>
@@ -112,11 +115,31 @@ document.getElementById('app').innerHTML = `
       <div class="player" style="background-image:url('${current.background}')">
         <div class="live-badge">🔴 LIVE</div>
         <button id="playBtn">▶</button>
+        <div class="loading-overlay" id="loadingOverlay">
+          <div class="spinner"></div>
+          Loading stream...
+        </div>
       </div>
       <div class="meta">
         <h1>${current.name} Live</h1>
         <p>Live headline coverage • breaking news</p>
       </div>
+      <div class="ads-native">
+        <script async="async" data-cfasync="false" src="https://tuckerclassesjackal.com/4f4db07c00df56205a17f43ff7e40355/invoke.js"></script>
+        <div id="container-4f4db07c00df56205a17f43ff7e40355"></div>
+      </div>
+    </div>
+    <div class="ads-banner">
+      <script>
+        atOptions = {
+          'key' : '8e98dd42f7c13f3dfa308629e853d3c9',
+          'format' : 'iframe',
+          'height' : 250,
+          'width' : 300,
+          'params' : {}
+        };
+      </script>
+      <script src="https://tuckerclassesjackal.com/8e98dd42f7c13f3dfa308629e853d3c9/invoke.js"></script>
     </div>
     <div class="ticker">
       <div class="ticker-track">
@@ -132,8 +155,11 @@ document.getElementById('app').innerHTML = `
 </div>
 `;
 
-document.getElementById('playBtn').onclick = () => {
-  document.getElementById('playBtn').innerText = '…';
+const playBtn = document.getElementById('playBtn');
+const loadingOverlay = document.getElementById('loadingOverlay');
+playBtn.onclick = () => {
+  playBtn.style.display = 'none';
+  loadingOverlay.style.display = 'flex';
   setTimeout(() => location.href = current.smartlink, 1500);
 };
 </script>
