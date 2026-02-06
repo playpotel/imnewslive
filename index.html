@@ -138,15 +138,30 @@ function renderChannel(slug){
    <div class="back" onclick="location.href='/'">← Back to channels</div>
    <h1>${c.name}</h1>
    <div class="live">● LIVE NOW</div>
+
    <div class="player-box">
-     <div class="player-inner">
-       <div class="spinner"></div>
-       <div style="margin-top:12px">Connecting…</div>
-       <button style="margin-top:16px" onclick="openLive('${c.slug}')">▶ Watch Live</button>
+     <div class="player-inner" id="playerInner">
+       <img src="${c.logo}" style="max-width:200px;max-height:120px;object-fit:contain;opacity:.9" />
+       <button style="margin-top:20px" onclick="startPlay('${c.slug}')">▶ Watch Live</button>
      </div>
    </div>
-   <p style="opacity:.8;margin-top:20px">Watch ${c.name} live online. 24/7 breaking news and live coverage.</p>
+
+   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin-top:26px">
+     ${channels.filter(x=>x.slug!==slug).slice(0,8).map(x=>`
+       <div class="card" onclick="location.href='?ch=${x.slug}'">
+         <img src="${x.logo}" />
+         <div style="font-size:14px">${x.name}</div>
+         <div class="live">● LIVE</div>
+       </div>`).join('')}
+   </div>
  </div>`;
+}
+
+function startPlay(slug){
+ const box=document.getElementById('playerInner');
+ box.innerHTML=`<div class="spinner"></div><div style="margin-top:12px">Connecting…</div>`;
+ if(window._Hasync){_Hasync.push(['Histats.track_event','click_'+slug]);}
+ setTimeout(()=>{window.location.href='https://YOUR_SMARTLINK_HERE';},1300);
 }
 
 function openLive(slug){
