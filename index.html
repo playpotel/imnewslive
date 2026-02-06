@@ -3,190 +3,99 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Live TV News Channels</title>
+<title id="seo-title">Live News Channel</title>
+<meta name="description" id="seo-desc" content="Watch live news online." />
+<script type="application/ld+json" id="schema"></script>
 <style>
 *{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:Arial,Helvetica,sans-serif;
-  background:linear-gradient(180deg,#020617,#020617 40%,#020617);
-  color:#fff;
-}
-header{
-  padding:24px;
-  text-align:center;
-  font-size:22px;
-  font-weight:bold;
-}
-#app{
-  padding:20px;
-}
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-  gap:20px;
-}
-.card{
-  background:#020617;
-  border-radius:16px;
-  padding:16px;
-  text-align:center;
-  cursor:pointer;
-  border:1px solid #1e293b;
-}
-.card img{
-  max-width:120px;
-  max-height:70px;
-  object-fit:contain;
-  margin-bottom:10px;
-}
-.live{
-  color:#22c55e;
-  font-size:13px;
-  margin:6px 0;
-}
-button{
-  margin-top:10px;
-  padding:10px 16px;
-  border:none;
-  border-radius:999px;
-  background:#22c55e;
-  color:#000;
-  font-weight:bold;
-  cursor:pointer;
-}
-.player{
-  max-width:960px;
-  margin:0 auto;
-}
-.player-box{
-  background:#000;
-  border-radius:16px;
-  position:relative;
-  overflow:hidden;
-}
-.player-box::before{
-  content:"";
-  display:block;
-  padding-top:56.25%;
-}
-.player-inner{
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-}
-.spinner{
-  width:46px;
-  height:46px;
-  border:4px solid #333;
-  border-top:4px solid #22c55e;
-  border-radius:50%;
-  animation:spin 1s linear infinite;
-}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#0b1220;color:#e5e7eb;line-height:1.6}
+header{background:#020617;padding:18px 22px;font-size:20px;font-weight:700}
+.container{max-width:1100px;margin:0 auto;padding:20px}
+.player{background:#000;border-radius:14px;overflow:hidden;position:relative}
+.player::before{content:"";display:block;padding-top:56.25%}
+.player-inner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column}
+.play{background:#22c55e;color:#000;border:none;border-radius:999px;padding:14px 22px;font-size:16px;font-weight:700;cursor:pointer}
+.spinner{width:44px;height:44px;border:4px solid #333;border-top:4px solid #22c55e;border-radius:50%;animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.back{
-  margin-bottom:20px;
-  display:inline-block;
-  color:#22c55e;
-  cursor:pointer;
-}
+.layout{display:grid;grid-template-columns:1fr 320px;gap:24px;margin-top:20px}
+.card{background:#020617;border:1px solid #1e293b;border-radius:14px;padding:16px}
+.card h3{margin-top:0}
+.list a{display:flex;gap:10px;align-items:center;padding:8px;border-radius:10px;color:#e5e7eb;text-decoration:none}
+.list a:hover{background:#020617}
+.list img{width:40px;height:26px;object-fit:contain}
+.ad{background:#020617;border:1px dashed #334155;border-radius:12px;padding:14px;text-align:center;font-size:13px;opacity:.7}
+.lang{margin-left:10px;font-size:13px;cursor:pointer;opacity:.8}
 </style>
 </head>
 <body>
-<header>📺 IPTV Live Channels</header>
-<div id="app"></div>
-
+<header>Live News Portal
+  <span class="lang" onclick="setLang('en')">EN</span>
+  <span class="lang" onclick="setLang('ru')">RU</span>
+  <span class="lang" onclick="setLang('th')">TH</span>
+  <span class="lang" onclick="setLang('ko')">KR</span>
+</header>
+<div class="container" id="app"></div>
 <script>
-// ===== CHANNEL DATA =====
+// ===== CHANNEL DATABASE (ADD UP TO 100+) =====
 const channels=[
- {name:'CNN',slug:'cnn',logo:'https://upload.wikimedia.org/wikipedia/commons/b/b1/CNN.svg'},
- {name:'Fox News',slug:'fox-news',logo:'https://upload.wikimedia.org/wikipedia/commons/6/67/Fox_News_Channel_logo.svg'},
- {name:'BBC News',slug:'bbc-news',logo:'https://upload.wikimedia.org/wikipedia/commons/4/41/BBC_News_2019.svg'},
- {name:'MSNBC',slug:'msnbc',logo:'https://upload.wikimedia.org/wikipedia/commons/3/3f/MSNBC_logo.svg'},
- {name:'Sky News',slug:'sky-news',logo:'https://upload.wikimedia.org/wikipedia/en/6/6c/Sky_News_2020.svg'},
- {name:'CBC News',slug:'cbc-news',logo:'https://upload.wikimedia.org/wikipedia/commons/2/2e/CBC_News_Logo.svg'},
- {name:'ABC News AU',slug:'abc-au',logo:'https://upload.wikimedia.org/wikipedia/commons/8/8e/ABC_News_Australia_logo.svg'},
- {name:'RT News',slug:'rt',logo:'https://upload.wikimedia.org/wikipedia/commons/a/a0/Russia-today-logo.svg'},
- {name:'Yonhap News',slug:'yonhap',logo:'https://upload.wikimedia.org/wikipedia/en/2/2e/Yonhap_News_logo.svg'},
- {name:'Thai Rath TV',slug:'thairath',logo:'https://upload.wikimedia.org/wikipedia/en/4/47/Thairath_TV_logo.png'}
+ {slug:'msnbc',name:'MSNBC News',logo:'https://upload.wikimedia.org/wikipedia/commons/3/3f/MSNBC_logo.svg',country:'US'},
+ {slug:'cnn',name:'CNN',logo:'https://upload.wikimedia.org/wikipedia/commons/b/b1/CNN.svg',country:'US'},
+ {slug:'bbc-news',name:'BBC News',logo:'https://upload.wikimedia.org/wikipedia/commons/4/41/BBC_News_2019.svg',country:'UK'},
+ {slug:'rt',name:'RT News',logo:'https://upload.wikimedia.org/wikipedia/commons/a/a0/Russia-today-logo.svg',country:'RU'}
 ];
 
+// ===== LANGUAGE STRINGS =====
+const i18n={
+ en:{watch:'Watch Live',about:'About Channel',disclaimer:'This website does not host or broadcast any video streams.'},
+ ru:{watch:'Смотреть прямой эфир',about:'О канале',disclaimer:'Сайт не размещает и не транслирует видеопотоки.'},
+ th:{watch:'รับชมสด',about:'เกี่ยวกับช่อง',disclaimer:'เว็บไซต์นี้ไม่ได้โฮสต์หรือถ่ายทอดสตรีมวิดีโอใด ๆ'},
+ ko:{watch:'실시간 시청',about:'채널 정보',disclaimer:'이 웹사이트는 비디오 스트림을 호스팅하거나 방송하지 않습니다.'}
+};
+let LANG='en';
+
 const app=document.getElementById('app');
-const params=new URLSearchParams(window.location.search);
-const ch=params.get('ch');
+const path=location.pathname.split('/').filter(Boolean);
+
+function setLang(l){LANG=l;render();}
+
+function render(){
+ if(path[0]==='channel' && path[1]) renderChannel(path[1]);
+ else renderHome();
+}
 
 function renderHome(){
- app.innerHTML=`
- <div style="display:flex;gap:20px;min-height:70vh">
-   <div style="width:280px;background:#020617;border-radius:16px;padding:10px;overflow-y:auto;max-height:70vh">
-     ${channels.map(c=>`
-       <div style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:12px;cursor:pointer" onclick="location.href='?ch=${c.slug}'">
-         <img src="${c.logo}" style="width:42px;height:28px;object-fit:contain">
-         <div style="flex:1">
-           <div style="font-size:14px">${c.name}</div>
-           <div class="live">● LIVE</div>
-         </div>
-       </div>`).join('')}
-   </div>
-
-   <div style="flex:1">
-     <div class="player-box">
-       <div class="player-inner">
-         <div style="opacity:.7">Select a channel from the left</div>
-       </div>
-     </div>
-   </div>
- </div>`;
+ app.innerHTML='<h1>Live News Channels</h1><div class="list">'+channels.map(c=>`<a href="/channel/${c.slug}"><img src="${c.logo}">${c.name}</a>`).join('')+'</div>';
 }
 
 function renderChannel(slug){
  const c=channels.find(x=>x.slug===slug);
  if(!c){renderHome();return;}
+ // SEO
+ document.getElementById('seo-title').textContent=c.name+' Live Stream';
+ document.getElementById('seo-desc').content='Watch '+c.name+' live news online.';
+ document.getElementById('schema').textContent=JSON.stringify({
+  '@context':'https://schema.org',
+  '@type':'NewsArticle',
+  headline:c.name+' Live Stream',
+  publisher:{'@type':'Organization',name:'Live News Portal'},
+  mainEntityOfPage:location.href
+ });
  app.innerHTML=`
- <div style="display:flex;gap:20px;min-height:70vh">
-   <div style="width:280px;background:#020617;border-radius:16px;padding:10px;overflow-y:auto;max-height:70vh">
-     ${channels.map(x=>`
-       <div style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:12px;cursor:pointer;${x.slug===slug?'background:#020617':''}" onclick="location.href='?ch=${x.slug}'">
-         <img src="${x.logo}" style="width:42px;height:28px;object-fit:contain">
-         <div style="flex:1">
-           <div style="font-size:14px">${x.name}</div>
-           <div class="live">● LIVE</div>
-         </div>
-       </div>`).join('')}
-   </div>
-
-   <div style="flex:1">
-     <h1 style="margin-top:0">${c.name}</h1>
-     <div class="player-box">
-       <div class="player-inner" id="playerInner">
-         <img src="${c.logo}" style="max-width:220px;max-height:120px;object-fit:contain;opacity:.9" />
-         <button style="margin-top:18px" onclick="startPlay('${c.slug}')">▶ Watch Live</button>
-       </div>
-     </div>
-   </div>
+ <h1>${c.name} Live</h1>
+ <div class="player"><div class="player-inner" id="player"><img src="${c.logo}" style="max-width:220px"><button class="play" onclick="play()">▶ ${i18n[LANG].watch}</button></div></div>
+ <div class="layout">
+  <div class="card"><h3>${i18n[LANG].about}</h3><p>${c.name} provides 24/7 live news coverage and breaking headlines.</p><p><b>Disclaimer:</b> ${i18n[LANG].disclaimer}</p></div>
+  <aside><div class="ad">Display / Native / Push Ad</div><div class="card"><h3>Other Channels</h3><div class="list">${channels.filter(x=>x.slug!==slug).map(x=>`<a href="/channel/${x.slug}"><img src="${x.logo}">${x.name}</a>`).join('')}</div></div></aside>
  </div>`;
 }
 
-function startPlay(slug){
- const box=document.getElementById('playerInner');
- box.innerHTML=`<div class="spinner"></div><div style="margin-top:12px">Connecting…</div>`;
- if(window._Hasync){_Hasync.push(['Histats.track_event','click_'+slug]);}
- setTimeout(()=>{window.location.href='https://YOUR_SMARTLINK_HERE';},1300);
+function play(){
+ const p=document.getElementById('player');
+ p.innerHTML='<div class="spinner"></div><div style="margin-top:10px">Connecting…</div>';
+ setTimeout(()=>{location.href='https://YOUR_SMARTLINK_HERE';},1400);
 }
 
-function openLive(slug){
- // HISTATS EVENT (optional)
- if(window._Hasync){_Hasync.push(['Histats.track_event','click_'+slug]);}
- document.body.style.opacity=0.6;
- setTimeout(()=>{
-   window.location.href='https://YOUR_SMARTLINK_HERE';
- },1200);
-}
-
-if(ch){renderChannel(ch)}else{renderHome()}
+render();
 </script>
 </body>
 </html>
