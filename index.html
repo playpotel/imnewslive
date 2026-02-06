@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="description" content="Live TV News streaming – breaking news, headlines, and live coverage." />
 
+  <!-- SEO LiveBlogPosting -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -27,7 +28,7 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin:0; padding:0; }
+    * { box-sizing:border-box; margin:0; padding:0; }
     body { font-family:'Inter',sans-serif; background:#0b0b0f; color:#fff; }
     a { text-decoration:none; color:inherit; }
 
@@ -124,23 +125,9 @@ document.getElementById('app').innerHTML = `
         <h1>${current.name} Live</h1>
         <p>Live headline coverage • breaking news</p>
       </div>
-      <div class="ads-native">
-        <script async="async" data-cfasync="false" src="https://tuckerclassesjackal.com/4f4db07c00df56205a17f43ff7e40355/invoke.js"></script>
-        <div id="container-4f4db07c00df56205a17f43ff7e40355"></div>
-      </div>
+      <div class="ads-native"></div>
     </div>
-    <div class="ads-banner">
-      <script>
-        atOptions = {
-          'key' : '8e98dd42f7c13f3dfa308629e853d3c9',
-          'format' : 'iframe',
-          'height' : 250,
-          'width' : 300,
-          'params' : {}
-        };
-      </script>
-      <script src="https://tuckerclassesjackal.com/8e98dd42f7c13f3dfa308629e853d3c9/invoke.js"></script>
-    </div>
+    <div class="ads-banner"></div>
     <div class="ticker">
       <div class="ticker-track">
         <span>BREAKING: Global market reacts to latest update <small>World</small></span>
@@ -155,6 +142,7 @@ document.getElementById('app').innerHTML = `
 </div>
 `;
 
+// Play button + loading overlay
 const playBtn = document.getElementById('playBtn');
 const loadingOverlay = document.getElementById('loadingOverlay');
 playBtn.onclick = () => {
@@ -162,6 +150,31 @@ playBtn.onclick = () => {
   loadingOverlay.style.display = 'flex';
   setTimeout(() => location.href = current.smartlink, 1500);
 };
+
+// Banner Adsterra (300x250)
+const bannerContainer = document.querySelector('.ads-banner');
+const bannerScript = document.createElement('script');
+bannerScript.innerHTML = `
+  atOptions = {
+    'key' : '8e98dd42f7c13f3dfa308629e853d3c9',
+    'format' : 'iframe',
+    'height' : 250,
+    'width' : 300,
+    'params' : {}
+  };
+`;
+bannerContainer.appendChild(bannerScript);
+const bannerInvoke = document.createElement('script');
+bannerInvoke.src = 'https://tuckerclassesjackal.com/8e98dd42f7c13f3dfa308629e853d3c9/invoke.js';
+bannerContainer.appendChild(bannerInvoke);
+
+// Native Adsterra
+const nativeContainer = document.querySelector('.ads-native');
+const nativeScript = document.createElement('script');
+nativeScript.async = true;
+nativeScript.setAttribute('data-cfasync','false');
+nativeScript.src = 'https://tuckerclassesjackal.com/4f4db07c00df56205a17f43ff7e40355/invoke.js';
+nativeContainer.appendChild(nativeScript);
 </script>
 
 </body>
