@@ -37,20 +37,21 @@
 
     main{padding-top:52px;max-width:1400px;margin:auto}
 
-    .layout{display:grid;grid-template-columns:1fr 320px;gap:16px;padding:14px}
+    /* LAYOUT */
+    .layout{display:grid;grid-template-columns:1fr 320px;gap:18px;padding:16px;transition:all 0.3s ease}
 
     /* PLAYER */
-    .player-wrap{background:#000;border-radius:14px;overflow:hidden}
-    .player{position:relative;width:100%;aspect-ratio:16/9;background-size:cover;background-position:center}
+    .player-wrap{background:#000;border-radius:14px;overflow:hidden;transition:all 0.3s ease}
+    .player{position:relative;width:100%;aspect-ratio:16/9;background-size:cover;background-position:center;transition:all 0.3s ease}
     .player::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.25),rgba(0,0,0,.65))}
 
-    .player button{position:absolute;inset:0;margin:auto;width:82px;height:82px;border-radius:50%;border:none;background:#ff2c2c;color:#fff;font-size:36px;cursor:pointer;z-index:2}
+    .player button{position:absolute;inset:0;margin:auto;width:82px;height:82px;border-radius:50%;border:none;background:#ff2c2c;color:#fff;font-size:36px;cursor:pointer;z-index:2;transition:all 0.3s ease}
 
     .live-badge{position:absolute;top:10px;left:10px;background:#ff2c2c;padding:5px 9px;border-radius:6px;font-size:11px;font-weight:700;z-index:2}
 
     .meta{padding:12px}
-    .meta h1{margin:0 0 6px;font-size:20px}
-    .meta p{margin:0;font-size:13px;color:#ff6b6b}
+    .meta h1{margin:0 0 6px;font-size:20px;transition:all 0.3s ease}
+    .meta p{margin:0;font-size:13px;color:#ff6b6b;transition:all 0.3s ease}
 
     /* TICKER */
     .ticker{background:#111;padding:8px 0;overflow:hidden;border-top:1px solid #222}
@@ -58,21 +59,45 @@
     .ticker span{font-weight:600;font-size:13px}
     .ticker small{opacity:.7;margin-left:6px;font-size:12px}
 
-    @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-100%)} }
+    @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-100%)}}
 
     /* SIDEBAR */
-    .sidebar{background:#111;border-radius:14px;padding:10px}
-    .channel{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;cursor:pointer}
+    .sidebar{background:#111;border-radius:14px;padding:10px;transition:all 0.3s ease}
+    .channel{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;cursor:pointer;transition:all 0.3s ease}
     .channel:hover{background:#1b1b22}
     .channel.active{background:#ff2c2c}
     .channel img{width:38px;height:38px;border-radius:8px;object-fit:cover}
 
-    /* MOBILE FIRST */
-    @media(max-width:900px){
-      .layout{grid-template-columns:1fr}
-      .sidebar{order:-1;display:flex;gap:10px;overflow-x:auto}
-      .channel{min-width:120px;justify-content:center}
-      .channel strong{font-size:13px}
+    /* MOBILE FIRST / SCALING */
+    @media(max-width:1024px){
+      .layout{padding:14px;gap:14px}
+      .player button{width:76px;height:76px;font-size:34px}
+      .meta h1{font-size:19px}
+      .meta p{font-size:13px}
+    }
+    @media(max-width:600px){
+      header{height:48px}
+      header .logo{font-size:14px}
+      main{padding-top:48px}
+      .layout{padding:10px;gap:12px}
+      .player button{width:68px;height:68px;font-size:28px}
+      .live-badge{font-size:10px;padding:4px 7px}
+      .meta{padding:10px}
+      .meta h1{font-size:17px}
+      .meta p{font-size:12px}
+      .ticker span{font-size:12px}
+      .ticker small{font-size:11px}
+      .channel img{width:34px;height:34px}
+      .channel strong{font-size:12px}
+    }
+
+    /* LANDSCAPE MODE HP */
+    @media (orientation: landscape) and (max-width: 900px) {
+      .layout{grid-template-columns:1fr;gap:10px}
+      .player-wrap{aspect-ratio:20/9}
+      .player button{width:60px;height:60px;font-size:24px}
+      .meta h1{font-size:16px}
+      .meta p{font-size:11px}
     }
   </style>
 </head>
@@ -86,45 +111,15 @@
 
 <script>
 const channels = [
-  {
-    name:'MSNBC',
-    slug:'msnbc-live',
-    logo:'https://www.hollywoodreporter.com/wp-content/uploads/2021/08/MSNBC-Logo-Publicity-H-2021.jpg',
-    background:'https://www.hollywoodreporter.com/wp-content/uploads/2021/08/MSNBC-Logo-Publicity-H-2021.jpg',
-    smartlink:'https://tuckerclassesjackal.com/x5xfim9w?key=688ec6c1d935ff3ebfc3c2450ddf461f'
-  },
-  {
-    name:'CNN',
-    slug:'cnn-live',
-    logo:'https://media.cnn.com/api/v1/images/cnn/cnn-placeholder-image.jpeg?c=16x9&q=h_270,w_480,c_fill',
-    background:'https://media.cnn.com/api/v1/images/cnn/cnn-placeholder-image.jpeg?c=16x9&q=h_270,w_480,c_fill',
-    smartlink:'https://tuckerclassesjackal.com/x5xfim9w?key=688ec6c1d935ff3ebfc3c2450ddf461f'
-  },
-  {
-    name:'BBC',
-    slug:'bbc-live',
-    logo:'https://images7.alphacoders.com/139/thumb-1920-1390350.png',
-    background:'https://images7.alphacoders.com/139/thumb-1920-1390350.png',
-    smartlink:'https://tuckerclassesjackal.com/x5xfim9w?key=688ec6c1d935ff3ebfc3c2450ddf461f'
-  },
-  {
-    name:'Al Jazeera',
-    slug:'aljazeera-live',
-    logo:'https://i.ytimg.com/vi/bNyUyrR0PHo/maxresdefault.jpg',
-    background:'https://i.ytimg.com/vi/bNyUyrR0PHo/maxresdefault.jpg',
-    smartlink:'https://tuckerclassesjackal.com/x5xfim9w?key=688ec6c1d935ff3ebfc3c2450ddf461f'
-  }
+  {name:'MSNBC',slug:'msnbc-live',logo:'https://www.hollywoodreporter.com/wp-content/uploads/2021/08/MSNBC-Logo-Publicity-H-2021.jpg',background:'https://www.hollywoodreporter.com/wp-content/uploads/2021/08/MSNBC-Logo-Publicity-H-2021.jpg',smartlink:'https://tuckerclassesjackal.com/x5xfim9w?key=688ec6c1d935ff3ebfc3c2450ddf461f'},
+  {name:'CNN',slug:'cnn-live',logo:'https://media.cnn.com/api/v1/images/cnn/cnn-placeholder-image.jpeg?c=16x9&q=h_270,w_480,c_fill',background:'https://media.cnn.com/api/v1/images/cnn/cnn-placeholder-image.jpeg?c=16x9&q=h_270,w_480,c_fill',smartlink:'https://tuckerclassesjackal.com/x5xfim9w?key=688ec6c1d935ff3ebfc3c2450ddf461f'},
+  {name:'BBC',slug:'bbc-live',logo:'https://images7.alphacoders.com/139/thumb-1920-1390350.png',background:'https://images7.alphacoders.com/139/thumb-1920-1390350.png',smartlink:'https://tuckerclassesjackal.com/x5xfim9w?key=688ec6c1d935ff3ebfc3c2450ddf461f'},
+  {name:'Al Jazeera',slug:'aljazeera-live',logo:'https://i.ytimg.com/vi/bNyUyrR0PHo/maxresdefault.jpg',background:'https://i.ytimg.com/vi/bNyUyrR0PHo/maxresdefault.jpg',smartlink:'https://tuckerclassesjackal.com/x5xfim9w?key=688ec6c1d935ff3ebfc3c2450ddf461f'}
 ];
 
 const slug = location.pathname.replace('/','') || channels[0].slug;
 const current = channels.find(c=>c.slug===slug) || channels[0];
-
-const sidebar = channels.map(c=>`
-  <a href="/${c.slug}" class="channel ${c.slug===current.slug?'active':''}">
-    <img src="${c.logo}">
-    <strong>${c.name}</strong>
-  </a>
-`).join('');
+const sidebar = channels.map(c=>`<a href="/${c.slug}" class="channel ${c.slug===current.slug?'active':''}"><img src="${c.logo}"><strong>${c.name}</strong></a>`).join('');
 
 document.getElementById('app').innerHTML = `
 <div class="layout">
@@ -139,7 +134,6 @@ document.getElementById('app').innerHTML = `
         <p>Live headline coverage • breaking news</p>
       </div>
     </div>
-
     <div class="ticker">
       <div class="ticker-track">
         <span>BREAKING: Global market reacts to latest update <small>World</small></span>
@@ -148,7 +142,6 @@ document.getElementById('app').innerHTML = `
       </div>
     </div>
   </div>
-
   <aside class="sidebar">
     ${sidebar}
   </aside>
