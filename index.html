@@ -2,149 +2,110 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title id="seo-title">Live News Channel</title>
-<meta name="description" id="seo-desc" content="Watch live news online." />
-<script type="application/ld+json" id="schema"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MSNBC Live News Stream</title>
+<meta name="description" content="Watch MSNBC live news stream online. Latest breaking news, politics, and world news." />
+
+<!-- SCHEMA -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  "headline": "MSNBC Live News Stream",
+  "publisher": {"@type": "Organization", "name": "Live News Mag"}
+}
+</script>
+
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#0b1220;color:#e5e7eb;line-height:1.6}
-header{background:#020617;padding:14px 16px;font-size:18px;font-weight:700;display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+header{background:#020617;padding:14px 16px;font-size:18px;font-weight:700}
+a{text-decoration:none;color:inherit}
 .container{max-width:1100px;margin:0 auto;padding:14px}
 
-/* PLAYER */
 .player{background:#000;border-radius:14px;overflow:hidden;position:relative}
 .player::before{content:"";display:block;padding-top:56.25%}
 .player-inner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column}
-.play{background:#22c55e;color:#000;border:none;border-radius:50%;width:64px;height:64px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.player-inner img{max-width:160px;margin-bottom:16px}
+.play{background:#22c55e;border:none;border-radius:50%;width:64px;height:64px;display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer}
 .spinner{width:44px;height:44px;border:4px solid #333;border-top:4px solid #22c55e;border-radius:50%;animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* LAYOUT */
 .layout{display:grid;grid-template-columns:1fr 320px;gap:20px;margin-top:18px}
 .card{background:#020617;border:1px solid #1e293b;border-radius:14px;padding:14px}
 .card h3{margin-top:0;font-size:16px}
-.list a{display:flex;gap:10px;align-items:center;padding:8px;border-radius:10px;color:#e5e7eb;text-decoration:none}
+.list a{display:flex;gap:10px;align-items:center;padding:8px;border-radius:10px}
 .list a:hover{background:#020617}
 .list img{width:40px;height:26px;object-fit:contain}
-.ad{background:#020617;border:1px dashed #334155;border-radius:12px;padding:12px;text-align:center;font-size:13px;opacity:.7}
+.ad{background:#020617;border:1px dashed #334155;border-radius:12px;padding:12px;text-align:center;font-size:13px;opacity:.9}
 
-/* MOBILE OPTIMIZATION */
-@media(max-width:900px){
-  .layout{grid-template-columns:1fr}
-}
-@media(max-width:600px){
-  header{font-size:16px}
-  h1{font-size:20px}
-  .play{width:56px;height:56px}
-  .list img{width:34px;height:22px}
-  .container{padding:12px}
-}
+@media(max-width:900px){.layout{grid-template-columns:1fr}}
+@media(max-width:600px){header{font-size:16px}.play{width:56px;height:56px}}
 </style>
 </head>
 <body>
-<header>Live News Portal
-  <span class="lang" onclick="setLang('en')">EN</span>
-  <span class="lang" onclick="setLang('ru')">RU</span>
-  <span class="lang" onclick="setLang('th')">TH</span>
-  <span class="lang" onclick="setLang('ko')">KR</span>
-</header>
-<div class="container" id="app"></div>
-<script>
-// ===== CHANNEL DATABASE (ADD UP TO 100+) =====
-const channels=[
- {slug:'msnbc',name:'MSNBC News',logo:'https://upload.wikimedia.org/wikipedia/commons/3/3f/MSNBC_logo.svg',country:'US'},
- {slug:'cnn',name:'CNN',logo:'https://upload.wikimedia.org/wikipedia/commons/b/b1/CNN.svg',country:'US'},
- {slug:'bbc-news',name:'BBC News',logo:'https://upload.wikimedia.org/wikipedia/commons/4/41/BBC_News_2019.svg',country:'UK'},
- {slug:'rt',name:'RT News',logo:'https://upload.wikimedia.org/wikipedia/commons/a/a0/Russia-today-logo.svg',country:'RU'}
-];
 
-// ===== LANGUAGE STRINGS =====
-const i18n={
- en:{watch:'Watch Live',about:'About Channel',disclaimer:'This website does not host or broadcast any video streams.'},
- ru:{watch:'Смотреть прямой эфир',about:'О канале',disclaimer:'Сайт не размещает и не транслирует видеопотоки.'},
- th:{watch:'รับชมสด',about:'เกี่ยวกับช่อง',disclaimer:'เว็บไซต์นี้ไม่ได้โฮสต์หรือถ่ายทอดสตรีมวิดีโอใด ๆ'},
- ko:{watch:'실시간 시청',about:'채널 정보',disclaimer:'이 웹사이트는 비디오 스트림을 호스팅하거나 방송하지 않습니다.'}
-};
-let LANG='en';
+<header>📺 MSNBC Live TV</header>
 
-const app=document.getElementById('app');
-const path=location.pathname.split('/').filter(Boolean);
+<div class="container">
 
-function setLang(l){LANG=l;render();}
-
-function render(){
- if(path[0]==='channel' && path[1]) renderChannel(path[1]);
- else renderHome();
-}
-
-function renderHome(){
- app.innerHTML='<h1>Live News Channels</h1><div class="list">'+channels.map(c=>`<a href="/channel/${c.slug}"><img src="${c.logo}">${c.name}</a>`).join('')+'</div>';
-}
-
-function renderChannel(slug){
- const c=channels.find(x=>x.slug===slug);
- if(!c){renderHome();return;}
- // SEO
- document.getElementById('seo-title').textContent=c.name+' Live Stream';
- document.getElementById('seo-desc').content='Watch '+c.name+' live news online.';
- document.getElementById('schema').textContent=JSON.stringify({
-  '@context':'https://schema.org',
-  '@type':'NewsArticle',
-  headline:c.name+' Live Stream',
-  publisher:{'@type':'Organization',name:'Live News Portal'},
-  mainEntityOfPage:location.href
- });
- app.innerHTML=`
- <h1>${c.name} Live</h1>
- <div class="player"><div class="player-inner" id="player"><img src="${c.logo}" style="max-width:220px"><button class="play" onclick="play()" aria-label="Play"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7-11-7z" fill="#000"/></svg></button></div></div>
- <div class="layout">
-  <div class="card"><h3>${i18n[LANG].about}</h3><p>${c.name} provides 24/7 live news coverage and breaking headlines.</p><p><b>Disclaimer:</b> ${i18n[LANG].disclaimer}</p></div>
-  <aside><div class="ad">Display / Native / Push Ad</div><div class="card"><h3>Other Channels</h3><div class="list">${channels.filter(x=>x.slug!==slug).map(x=>`<a href="/channel/${x.slug}"><img src="${x.logo}">${x.name}</a>`).join('')}</div></div></aside>
- </div>`;
-}
-
-function play(){
- const p=document.getElementById('player');
- p.innerHTML='<div class="spinner"></div><div style="margin-top:10px">Connecting…</div>';
- setTimeout(()=>{location.href='https://YOUR_SMARTLINK_HERE';},1400);
-}
-
-render();
-</script>
-
-<!-- ADSTERRA INTEGRATION START -->
-<script>
-const SMARTLINK_URL = 'https://tuckerclassesjackal.com/x5xfim9w?key=688ec6c1d935ff3ebfc3c2450ddf461f';
-function handlePlayClick(){
-  const overlay=document.getElementById('play-overlay');
-  if(overlay){overlay.innerHTML='<div class="spinner"></div><div style="margin-top:10px">Connecting…</div>';}
-  setTimeout(()=>{window.location.href=SMARTLINK_URL;},1200);
-}
-</script>
-
-<!-- 300x250 BANNER (Below Player / Sidebar) -->
-<div class="ad ad-300">
-<script>
-  atOptions = {
-    'key' : '8e98dd42f7c13f3dfa308629e853d3c9',
-    'format' : 'iframe',
-    'height' : 250,
-    'width' : 300,
-    'params' : {}
-  };
-</script>
-<script src="https://tuckerclassesjackal.com/8e98dd42f7c13f3dfa308629e853d3c9/invoke.js"></script>
+<div class="player">
+  <div class="player-inner" id="play-overlay">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/9/9e/MSNBC_2015.svg" alt="MSNBC Logo">
+    <button class="play" onclick="handlePlayClick()">▶</button>
+  </div>
 </div>
 
-<!-- NATIVE ADS (In-Article / Feed) -->
-<div class="ad ad-native">
+<div class="layout">
+
+<div class="card">
+<h1>Watch MSNBC Live Stream</h1>
+<p>MSNBC is a leading American news channel covering politics, breaking news, and global events. Click play to watch the live broadcast.</p>
+
+<!-- NATIVE ADS -->
+<div class="ad">
 <script async data-cfasync="false" src="https://tuckerclassesjackal.com/4f4db07c00df56205a17f43ff7e40355/invoke.js"></script>
 <div id="container-4f4db07c00df56205a17f43ff7e40355"></div>
 </div>
 
-<!-- SOCIAL BAR (Mobile Friendly) -->
+<p style="font-size:13px;opacity:.7">Disclaimer: This site does not host or broadcast any video streams.</p>
+
+
+
+</div>
+
+<div class="card">
+<h3>Other Live Channels</h3>
+<div class="list">
+<a href="/channel/cnn"><img src="https://upload.wikimedia.org/wikipedia/commons/6/66/CNN_International_logo.svg"> CNN</a>
+<a href="/channel/fox-news"><img src="https://upload.wikimedia.org/wikipedia/commons/6/67/Fox_News_Channel_logo.svg"> Fox News</a>
+<a href="/channel/bbc-news"><img src="https://upload.wikimedia.org/wikipedia/commons/b/bc/BBC_News_2019.svg"> BBC News</a>
+</div>
+
+<!-- 300x250 BANNER -->
+<div class="ad">
+<script>
+  atOptions={key:'8e98dd42f7c13f3dfa308629e853d3c9',format:'iframe',height:250,width:300,params:{}};
+</script>
+<script src="https://tuckerclassesjackal.com/8e98dd42f7c13f3dfa308629e853d3c9/invoke.js"></script>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- SMARTLINK HANDLER -->
+<script>
+const SMARTLINK_URL='https://tuckerclassesjackal.com/x5xfim9w?key=688ec6c1d935ff3ebfc3c2450ddf461f';
+function handlePlayClick(){
+  const overlay=document.getElementById('play-overlay');
+  overlay.innerHTML='<div class="spinner"></div><div style="margin-top:10px">Connecting…</div>';
+  setTimeout(()=>{window.location.href=SMARTLINK_URL;},1200);
+}
+</script>
+
+<!-- SOCIAL BAR -->
 <script src="https://tuckerclassesjackal.com/66/38/57/663857dca5bbc3fa7ab378bc1374fdff.js"></script>
-<!-- ADSTERRA INTEGRATION END -->
+
 </body>
 </html>
