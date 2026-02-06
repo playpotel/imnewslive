@@ -5,39 +5,36 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Live TV News Channels</title>
-<meta name="description" content="Live TV News Channels worldwide. Click Watch Live to continue.">
+<meta name="description" content="Live TV News Channels worldwide">
 
-<!-- HISTATS SCRIPT -->
+<!-- HISTATS -->
 
 <script type="text/javascript">
 var _Hasync = _Hasync || [];
 _Hasync.push(['Histats.start', '1,XXXXXXX,4,0,0,0,00010000']);
 _Hasync.push(['Histats.fasi', '1']);
 _Hasync.push(['Histats.track_hits', '']);
-(function() {
-  var hs = document.createElement('script');
-  hs.type = 'text/javascript';
-  hs.async = true;
-  hs.src = '//s10.histats.com/js15_as.js';
-  document.getElementsByTagName('head')[0].appendChild(hs);
+(function(){
+  var hs=document.createElement('script');
+  hs.async=true;
+  hs.src='//s10.histats.com/js15_as.js';
+  document.head.appendChild(hs);
 })();
 </script>
 
 <style>
-:root{--bg:#0f172a;--card:#111827;--text:#e5e7eb;--accent:#22c55e}
+:root{--bg:#0b1220;--card:#111827;--text:#e5e7eb;--accent:#22c55e}
 body{margin:0;font-family:Arial,system-ui;background:var(--bg);color:var(--text)}
-header{text-align:center;padding:18px;font-size:22px;font-weight:700}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;padding:20px}
+header{text-align:center;padding:20px;font-size:22px;font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:18px;padding:20px}
 .card{background:var(--card);border-radius:14px;padding:14px;text-align:center;cursor:pointer;transition:.2s}
 .card:hover{transform:translateY(-4px)}
 .card img{width:100%;height:90px;object-fit:contain}
 .card h3{font-size:14px;margin:10px 0 6px}
 .live{color:var(--accent);font-size:12px}
 button{margin-top:8px;background:var(--accent);border:none;color:#022c22;padding:8px 16px;border-radius:999px;font-weight:600;cursor:pointer}
-
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;z-index:9999}
 .spinner{width:54px;height:54px;border:4px solid #334155;border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite}
-
 @keyframes spin{to{transform:rotate(360deg)}}
 </style>
 
@@ -47,73 +44,66 @@ button{margin-top:8px;background:var(--accent);border:none;color:#022c22;padding
 <div id="app"></div>
 
 <script>
-const SMARTLINK = "https://SMARTLINK_KAMU.com";
+const SMARTLINK='https://SMARTLINK_KAMU.com';
 
-const channels = [
- {slug:'cnn',name:'CNN',country:'US',logo:'https://upload.wikimedia.org/wikipedia/commons/b/b1/CNN.svg'},
- {slug:'foxnews',name:'Fox News',country:'US',logo:'https://upload.wikimedia.org/wikipedia/commons/6/67/Fox_News_Channel_logo.svg'},
- {slug:'msnbc',name:'MSNBC',country:'US',logo:'https://upload.wikimedia.org/wikipedia/commons/9/9e/MSNBC_Logo_2015.svg'},
- {slug:'bbc',name:'BBC News',country:'UK',logo:'https://upload.wikimedia.org/wikipedia/commons/6/62/BBC_News_2019.svg'},
- {slug:'skynews',name:'Sky News',country:'UK',logo:'https://upload.wikimedia.org/wikipedia/commons/4/4d/Sky_News_logo_2020.svg'},
- {slug:'cbc',name:'CBC News',country:'CA',logo:'https://upload.wikimedia.org/wikipedia/commons/6/65/CBC_News_Logo.svg'},
- {slug:'ctv',name:'CTV News',country:'CA',logo:'https://upload.wikimedia.org/wikipedia/commons/6/6f/CTV_News_logo.svg'},
- {slug:'abcau',name:'ABC News AU',country:'AU',logo:'https://upload.wikimedia.org/wikipedia/commons/8/8d/ABC_News_logo.svg'},
- {slug:'sbs',name:'SBS News',country:'AU',logo:'https://upload.wikimedia.org/wikipedia/commons/8/8c/SBS_logo_2015.svg'},
- {slug:'rt',name:'RT News',country:'RU',logo:'https://upload.wikimedia.org/wikipedia/commons/a/a0/Russia-today-logo.svg'},
- {slug:'ert',name:'ERT News',country:'GR',logo:'https://upload.wikimedia.org/wikipedia/commons/6/6e/ERT_logo_2020.svg'},
- {slug:'thairath',name:'Thairath TV',country:'TH',logo:'https://upload.wikimedia.org/wikipedia/en/7/7c/Thairath_TV_logo.png'},
- {slug:'yonhap',name:'Yonhap News',country:'KR',logo:'https://upload.wikimedia.org/wikipedia/commons/5/55/Yonhap_News_logo.svg'},
- {slug:'tvbs',name:'TVBS News',country:'TW',logo:'https://upload.wikimedia.org/wikipedia/en/5/5d/TVBS_logo.svg'}
+const channels=[
+ {slug:'cnn',name:'CNN',logo:'https://upload.wikimedia.org/wikipedia/commons/b/b1/CNN.svg'},
+ {slug:'foxnews',name:'Fox News',logo:'https://upload.wikimedia.org/wikipedia/commons/6/67/Fox_News_Channel_logo.svg'},
+ {slug:'msnbc',name:'MSNBC',logo:'https://upload.wikimedia.org/wikipedia/commons/9/9e/MSNBC_Logo_2015.svg'},
+ {slug:'bbc',name:'BBC News',logo:'https://upload.wikimedia.org/wikipedia/commons/6/62/BBC_News_2019.svg'},
+ {slug:'skynews',name:'Sky News',logo:'https://upload.wikimedia.org/wikipedia/commons/4/4d/Sky_News_logo_2020.svg'},
+ {slug:'cbc',name:'CBC News',logo:'https://upload.wikimedia.org/wikipedia/commons/6/65/CBC_News_Logo.svg'},
+ {slug:'ctv',name:'CTV News',logo:'https://upload.wikimedia.org/wikipedia/commons/6/6f/CTV_News_logo.svg'},
+ {slug:'abcau',name:'ABC News AU',logo:'https://upload.wikimedia.org/wikipedia/commons/8/8d/ABC_News_logo.svg'},
+ {slug:'sbs',name:'SBS News',logo:'https://upload.wikimedia.org/wikipedia/commons/8/8c/SBS_logo_2015.svg'},
+ {slug:'rt',name:'RT News',logo:'https://upload.wikimedia.org/wikipedia/commons/a/a0/Russia-today-logo.svg'},
+ {slug:'ert',name:'ERT News',logo:'https://upload.wikimedia.org/wikipedia/commons/6/6e/ERT_logo_2020.svg'},
+ {slug:'thairath',name:'Thairath TV',logo:'https://upload.wikimedia.org/wikipedia/en/7/7c/Thairath_TV_logo.png'},
+ {slug:'yonhap',name:'Yonhap News',logo:'https://upload.wikimedia.org/wikipedia/commons/5/55/Yonhap_News_logo.svg'},
+ {slug:'tvbs',name:'TVBS News',logo:'https://upload.wikimedia.org/wikipedia/en/5/5d/TVBS_logo.svg'}
 ];
 
-const params = new URLSearchParams(window.location.search);
-const ch = params.get('ch');
+const app=document.getElementById('app');
+const params=new URLSearchParams(window.location.search);
+const ch=params.get('ch');
 
-function openLive(name, slug){
-  try{
-    if(window._Hasync){_Hasync.push(['Histats.track_event','click_'+slug]);}
-  }catch(e){}
-
-  const overlay=document.createElement('div');
-  overlay.className='overlay';
-  overlay.innerHTML='<div class="spinner"></div><div style="margin-top:14px">Connecting to '+name+'…</div>';
-  document.body.appendChild(overlay);
-
-  setTimeout(function(){
-    window.open(SMARTLINK,'_blank');
-    overlay.remove();
-  },2200);
+function openLive(name,slug){
+ try{if(window._Hasync){_Hasync.push(['Histats.track_event','click_'+slug]);}}catch(e){}
+ const o=document.createElement('div');
+ o.className='overlay';
+ o.innerHTML='<div class="spinner"></div><div style="margin-top:14px">Connecting to '+name+'…</div>';
+ document.body.appendChild(o);
+ setTimeout(function(){window.open(SMARTLINK,'_blank');o.remove();},2200);
 }
 
 function renderHome(){
-  const grid=document.createElement('div');
-  grid.className='grid';
-
-  channels.forEach(function(c){
-    const card=document.createElement('div');
-    card.className='card';
-    card.innerHTML='<img src="'+c.logo+'"><h3>'+c.name+'</h3><div class="live">● LIVE</div><button onclick="event.stopPropagation();openLive('"+c.name+"','"+c.slug+"')">Watch Live</button>';
-    card.onclick=function(){window.location.href='?ch='+c.slug;};
-    grid.appendChild(card);
-  });
-
-  document.getElementById('app').appendChild(grid);
+ app.innerHTML='';
+ const grid=document.createElement('div');
+ grid.className='grid';
+ channels.forEach(function(c){
+  const card=document.createElement('div');
+  card.className='card';
+  card.innerHTML='<img src="'+c.logo+'"><h3>'+c.name+'</h3><div class="live">● LIVE</div><button>Watch Live</button>';
+  card.onclick=function(){window.location.href='?ch='+c.slug;};
+  card.querySelector('button').onclick=function(e){e.stopPropagation();openLive(c.name,c.slug);};
+  grid.appendChild(card);
+ });
+ app.appendChild(grid);
 }
 
 function renderChannel(slug){
-  const c=channels.find(function(x){return x.slug===slug});
-  if(!c){renderHome();return;}
-
-  const wrap=document.createElement('div');
-  wrap.style.textAlign='center';
-  wrap.style.padding='40px';
-
-  wrap.innerHTML='<img src="'+c.logo+'" style="width:220px"><h1>'+c.name+'</h1><div class="live">● LIVE</div><br><button onclick="openLive(\''+c.name+'\',\''+c.slug+'\')">▶ Watch Live</button>';
-
-  document.getElementById('app').appendChild(wrap);
+ app.innerHTML='';
+ const c=channels.find(function(x){return x.slug===slug});
+ if(!c){renderHome();return;}
+ const wrap=document.createElement('div');
+ wrap.style.textAlign='center';
+ wrap.style.padding='40px';
+ wrap.innerHTML='<img src="'+c.logo+'" style="width:220px"><h1>'+c.name+'</h1><div class="live">● LIVE</div><br><button id="play">▶ Watch Live</button>';
+ app.appendChild(wrap);
+ document.getElementById('play').onclick=function(){openLive(c.name,c.slug);};
 }
 
-if(ch){renderChannel(ch)}else{renderHome()}
+if(ch){renderChannel(ch);}else{renderHome();}
 </script>
 
 </body>
