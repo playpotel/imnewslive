@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Live TV News Streaming</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="description" content="Live TV News streaming – breaking news, headlines, and live coverage." />
 
   <!-- SEO LiveBlogPosting -->
@@ -29,45 +29,50 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     *{box-sizing:border-box}
-    body{margin:0;font-family:'Inter',sans-serif;background:#0b0b0f;color:#fff}
+    body{margin:0;font-family:'Inter',sans-serif;background:#0b0b0f;color:#fff;-webkit-tap-highlight-color:transparent}
     a{text-decoration:none;color:inherit}
 
-    header{position:fixed;top:0;left:0;right:0;height:56px;background:#000;display:flex;align-items:center;padding:0 16px;z-index:50}
-    header .logo{font-weight:700;color:#ff2c2c}
+    header{position:fixed;top:0;left:0;right:0;height:52px;background:#000;display:flex;align-items:center;padding:0 14px;z-index:50}
+    header .logo{font-weight:700;color:#ff2c2c;font-size:15px}
 
-    main{padding-top:56px;max-width:1400px;margin:auto}
+    main{padding-top:52px;max-width:1400px;margin:auto}
 
-    .layout{display:grid;grid-template-columns:1fr 320px;gap:20px;padding:16px}
+    .layout{display:grid;grid-template-columns:1fr 320px;gap:16px;padding:14px}
 
     /* PLAYER */
-    .player-wrap{background:#000;border-radius:12px;overflow:hidden}
-    .player{position:relative;width:100%;padding-top:56.25%;background:#000}
-    .player button{position:absolute;inset:0;margin:auto;width:90px;height:90px;border-radius:50%;border:none;background:#ff2c2c;color:#fff;font-size:40px;cursor:pointer}
+    .player-wrap{background:#000;border-radius:14px;overflow:hidden}
+    .player{position:relative;width:100%;aspect-ratio:16/9;background-size:cover;background-position:center}
+    .player::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.25),rgba(0,0,0,.65))}
 
-    .live-badge{position:absolute;top:12px;left:12px;background:#ff2c2c;padding:6px 10px;border-radius:6px;font-size:12px;font-weight:700}
+    .player button{position:absolute;inset:0;margin:auto;width:82px;height:82px;border-radius:50%;border:none;background:#ff2c2c;color:#fff;font-size:36px;cursor:pointer;z-index:2}
 
-    .meta{padding:14px}
-    .meta h1{margin:0 0 6px;font-size:22px}
-    .meta p{margin:0;font-size:14px;color:#ff6b6b}
+    .live-badge{position:absolute;top:10px;left:10px;background:#ff2c2c;padding:5px 9px;border-radius:6px;font-size:11px;font-weight:700;z-index:2}
+
+    .meta{padding:12px}
+    .meta h1{margin:0 0 6px;font-size:20px}
+    .meta p{margin:0;font-size:13px;color:#ff6b6b}
 
     /* TICKER */
-    .ticker{background:#111;padding:10px 0;overflow:hidden;border-top:1px solid #222}
-    .ticker-track{display:flex;gap:60px;white-space:nowrap;animation:scroll 30s linear infinite}
-    .ticker span{font-weight:600}
-    .ticker small{opacity:.7;margin-left:6px}
+    .ticker{background:#111;padding:8px 0;overflow:hidden;border-top:1px solid #222}
+    .ticker-track{display:flex;gap:48px;white-space:nowrap;animation:scroll 28s linear infinite}
+    .ticker span{font-weight:600;font-size:13px}
+    .ticker small{opacity:.7;margin-left:6px;font-size:12px}
 
     @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-100%)} }
 
     /* SIDEBAR */
-    .sidebar{background:#111;border-radius:12px;padding:12px}
-    .channel{display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;cursor:pointer}
+    .sidebar{background:#111;border-radius:14px;padding:10px}
+    .channel{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;cursor:pointer}
     .channel:hover{background:#1b1b22}
     .channel.active{background:#ff2c2c}
-    .channel img{width:42px;height:42px;border-radius:6px;object-fit:cover}
+    .channel img{width:38px;height:38px;border-radius:8px;object-fit:cover}
 
+    /* MOBILE FIRST */
     @media(max-width:900px){
       .layout{grid-template-columns:1fr}
-      .sidebar{order:-1}
+      .sidebar{order:-1;display:flex;gap:10px;overflow-x:auto}
+      .channel{min-width:120px;justify-content:center}
+      .channel strong{font-size:13px}
     }
   </style>
 </head>
@@ -85,24 +90,28 @@ const channels = [
     name:'MSNBC',
     slug:'msnbc-live',
     logo:'https://www.hollywoodreporter.com/wp-content/uploads/2021/08/MSNBC-Logo-Publicity-H-2021.jpg',
+    background:'https://www.hollywoodreporter.com/wp-content/uploads/2021/08/MSNBC-Logo-Publicity-H-2021.jpg',
     smartlink:'https://tuckerclassesjackal.com/x5xfim9w?key=688ec6c1d935ff3ebfc3c2450ddf461f'
   },
   {
     name:'CNN',
     slug:'cnn-live',
     logo:'https://media.cnn.com/api/v1/images/cnn/cnn-placeholder-image.jpeg?c=16x9&q=h_270,w_480,c_fill',
+    background:'https://media.cnn.com/api/v1/images/cnn/cnn-placeholder-image.jpeg?c=16x9&q=h_270,w_480,c_fill',
     smartlink:'https://tuckerclassesjackal.com/x5xfim9w?key=688ec6c1d935ff3ebfc3c2450ddf461f'
   },
   {
     name:'BBC',
     slug:'bbc-live',
     logo:'https://images7.alphacoders.com/139/thumb-1920-1390350.png',
+    background:'https://images7.alphacoders.com/139/thumb-1920-1390350.png',
     smartlink:'https://tuckerclassesjackal.com/x5xfim9w?key=688ec6c1d935ff3ebfc3c2450ddf461f'
   },
   {
     name:'Al Jazeera',
     slug:'aljazeera-live',
     logo:'https://i.ytimg.com/vi/bNyUyrR0PHo/maxresdefault.jpg',
+    background:'https://i.ytimg.com/vi/bNyUyrR0PHo/maxresdefault.jpg',
     smartlink:'https://tuckerclassesjackal.com/x5xfim9w?key=688ec6c1d935ff3ebfc3c2450ddf461f'
   }
 ];
@@ -121,7 +130,7 @@ document.getElementById('app').innerHTML = `
 <div class="layout">
   <div>
     <div class="player-wrap">
-      <div class="player">
+      <div class="player" style="background-image:url('${current.background}')">
         <div class="live-badge">🔴 LIVE</div>
         <button id="playBtn">▶</button>
       </div>
