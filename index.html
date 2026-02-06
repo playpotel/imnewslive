@@ -112,5 +112,39 @@ function play(){
 
 render();
 </script>
+
+<!-- ADSTERRA INTEGRATION START -->
+<script>
+const SMARTLINK_URL = 'https://tuckerclassesjackal.com/x5xfim9w?key=688ec6c1d935ff3ebfc3c2450ddf461f';
+function handlePlayClick(){
+  const overlay=document.getElementById('play-overlay');
+  if(overlay){overlay.innerHTML='<div class="spinner"></div><div style="margin-top:10px">Connecting…</div>';}
+  setTimeout(()=>{window.location.href=SMARTLINK_URL;},1200);
+}
+</script>
+
+<!-- 300x250 BANNER (Below Player / Sidebar) -->
+<div class="ad ad-300">
+<script>
+  atOptions = {
+    'key' : '8e98dd42f7c13f3dfa308629e853d3c9',
+    'format' : 'iframe',
+    'height' : 250,
+    'width' : 300,
+    'params' : {}
+  };
+</script>
+<script src="https://tuckerclassesjackal.com/8e98dd42f7c13f3dfa308629e853d3c9/invoke.js"></script>
+</div>
+
+<!-- NATIVE ADS (In-Article / Feed) -->
+<div class="ad ad-native">
+<script async data-cfasync="false" src="https://tuckerclassesjackal.com/4f4db07c00df56205a17f43ff7e40355/invoke.js"></script>
+<div id="container-4f4db07c00df56205a17f43ff7e40355"></div>
+</div>
+
+<!-- SOCIAL BAR (Mobile Friendly) -->
+<script src="https://tuckerclassesjackal.com/66/38/57/663857dca5bbc3fa7ab378bc1374fdff.js"></script>
+<!-- ADSTERRA INTEGRATION END -->
 </body>
 </html>
